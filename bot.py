@@ -7,7 +7,7 @@ from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandle
 PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1317941240:AAHxIBg8Oq0g2dfVgTBK9PfNxa0JCNGXDXk'
 CHANNEL = -1001302593973
-join_usernames = []
+current_step = 1
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -25,34 +25,35 @@ def new_channel_post(update: Update, context: CallbackContext):
             text="🔰 folge @militaernews für mehr 🔰", url="https://t.me/militaernews")))
 
 
-
-
-
 def new_post(update: Update, context: CallbackContext):
+  #  query = update.callback_query
+  #  querydata = query.data
+    context.user_data["step"] = 1
+
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text="<b>🕓 New scheduled post</b>"
-             "\n\n<i>Step 1 of 3</i>"+
-        "\nSend the news in one message, please.",
+        text="<u>🕓 New scheduled post</u>"
+             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
+             "\nNow send the news in one message, please.",
         parse_mode=telegram.ParseMode.HTML
     )
 
 
 
 def new_breaking(update: Update, context: CallbackContext):
+    context.user_data["step"] = 2
+
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text="<b>‼️ New breaking news</b>"
-             "\n\n<i>Step 1 of 3</i>" +
-             "\nSend the news in one message, please.",
+        text="<u>‼️ New breaking news</u>"
+             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
+             "\nNow send the news in one message, please.",
         parse_mode=telegram.ParseMode.HTML
     )
-
+    current_step = 2
 
 
 #
-
-
 
 
 def publish_post(update: Update, context: CallbackContext, text):
@@ -67,6 +68,7 @@ def publish_post(update: Update, context: CallbackContext, text):
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
 
+
 def publish_breaking(update: Update, context: CallbackContext, text):
     context.bot.send_message(
         chat_id=update.message.chat_id,
@@ -74,7 +76,7 @@ def publish_breaking(update: Update, context: CallbackContext, text):
 
     context.bot.send_message(
         chat_id=CHANNEL,
-        text="#EILMELDUNG ‼️"+ text  + "\nFolge @militaernews",
+        text="#EILMELDUNG ‼️" + text + "\nFolge @militaernews",
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
