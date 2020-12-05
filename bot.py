@@ -20,7 +20,7 @@ def verify(message: telegram.Message, context: CallbackContext):
         return True
     else:
         #   context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
-        context.bot.answer_callback_query(text="THIS IS AN ALERT", show_alert=True)
+        context.bot.answer_callback_query(callback_query_id="submit",text="THIS IS AN ALERT", show_alert=True)
 
 
 def start(update, context):
