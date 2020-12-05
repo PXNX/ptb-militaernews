@@ -7,7 +7,6 @@ from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandle
 PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1317941240:AAHxIBg8Oq0g2dfVgTBK9PfNxa0JCNGXDXk'
 CHANNEL = -1001302593973
-current_step = 1
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -26,8 +25,8 @@ def new_channel_post(update: Update, context: CallbackContext):
 
 
 def new_post(update: Update, context: CallbackContext):
-  #  query = update.callback_query
-  #  querydata = query.data
+    #  query = update.callback_query
+    #  querydata = query.data
     context.user_data["step"] = 1
 
     context.bot.send_message(
@@ -39,9 +38,8 @@ def new_post(update: Update, context: CallbackContext):
     )
 
 
-
 def new_breaking(update: Update, context: CallbackContext):
-    context.user_data["step"] = 2
+    context.user_data["step"] = 1
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
@@ -50,10 +48,29 @@ def new_breaking(update: Update, context: CallbackContext):
              "\nNow send the news in one message, please.",
         parse_mode=telegram.ParseMode.HTML
     )
-    current_step = 2
 
 
-#
+def incoming_text(update: Update, context: CallbackContext):
+    if context.user_data["step"] == 1:
+        choose_country(update, context, update.message.text)
+    elif context.user_data["step"] == 2:
+        context.bot.send_message(
+            chat_id=update.message.chat_id,
+            text="jetz sollte man Bilder etc. schicken",
+            parse_mode=telegram.ParseMode.HTML
+        )
+
+
+def choose_country(update: Update, context: CallbackContext, text):
+    context.user_data["step"] = 2
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="<u>‼️ New breaking news</u>"
+             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
+             "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die Hashtags automatisch dazu?",
+        parse_mode=telegram.ParseMode.HTML
+    )
 
 
 def publish_post(update: Update, context: CallbackContext, text):
@@ -151,6 +168,10 @@ def main():
 
     dp.add_handler(CommandHandler("post", new_post))
     dp.add_handler(CommandHandler("breaking", new_breaking))
+
+    dp.add_handler(MessageHandler(Filters.text, incoming_text))
+
+    # dp.add_handler(MessageHandler(Filters.a, incoming_media))
 
     dp.add_error_handler(error)  # REMOVE FOR STACKTRACE!!
 
