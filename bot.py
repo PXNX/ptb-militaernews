@@ -25,7 +25,37 @@ def new_channel_post(update: Update, context: CallbackContext):
             text="🔰 folge @militaernews für mehr 🔰", url="https://t.me/militaernews")))
 
 
-def new_post(update: Update, context: CallbackContext, text):
+
+
+
+def new_post(update: Update, context: CallbackContext):
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="<i>🕓 New scheduled post</i>"
+             "\n<b>Step 1 of 3</b>"+
+        "\nSend the news in one message, please.",
+        parse_mode=telegram.ParseMode.HTML
+    )
+
+
+
+def new_breaking(update: Update, context: CallbackContext):
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="<i>‼️ New breaking news</i>"
+             "\n<b>Step 1 of 3</b>" +
+             "\nSend the news in one message, please.",
+        parse_mode=telegram.ParseMode.HTML
+    )
+
+
+
+#
+
+
+
+
+def publish_post(update: Update, context: CallbackContext, text):
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
@@ -33,6 +63,18 @@ def new_post(update: Update, context: CallbackContext, text):
     context.bot.send_message(
         chat_id=CHANNEL,
         text=text + "\nFolge @militaernews",
+        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+            text="🔰 Weitere Meldungen 🔰",
+            url="https://t.me/militaernews")))
+
+def publish_breaking(update: Update, context: CallbackContext, text):
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="Nachricht gesendet")
+
+    context.bot.send_message(
+        chat_id=CHANNEL,
+        text="#EILMELDUNG ‼️"+ text  + "\nFolge @militaernews",
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
@@ -106,6 +148,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.update.channel_post, new_channel_post))
 
     dp.add_handler(CommandHandler("post", new_post))
+    dp.add_handler(CommandHandler("breaking", new_breaking))
 
     dp.add_error_handler(error)  # REMOVE FOR STACKTRACE!!
 
