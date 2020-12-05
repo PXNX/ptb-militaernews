@@ -64,7 +64,7 @@ def incoming_text(update: Update, context: CallbackContext):
         choose_country(update, context, update.message.text)
 
     elif context.user_data["step"] == 2:
-        context.user_data["step"] = 1 ## remove that^^ increase after album received.
+        context.user_data["step"] = 3 ## remove that^^ increase after album received.
 
         message_html(update,
                      context,
