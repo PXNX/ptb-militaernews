@@ -64,20 +64,20 @@ def incoming_text(update: Update, context: CallbackContext):
         choose_country(update, context, update.message.text)
 
     elif context.user_data["step"] == 2:
-        context.user_data["step"] = 3 ## remove that^^ increase after album received.
-
         message_html(update,
                      context,
                      "Step " + str(context.user_data["step"]) +
                      " of 3</b>\nNow send media as one album, please.")
 
+        context.user_data["step"] = 3  ## remove that^^ increase after album received.
+
     elif context.user_data["step"] == 3:
         context.bot.send_message(
             chat_id=update.message.chat_id,
-            text="jetz sollte man Bilder etc. schicken",
+            text="Please check for spelling mistakes and make sure everything is properly formatted before proceeding.",
             parse_mode=telegram.ParseMode.HTML,
             reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                text="Submit post",
+                text="Submit post 📝",
                 callback_data="1"
             )
             ))
@@ -93,6 +93,7 @@ def submit(update: Update, context: CallbackContext) -> None:
         else:
             publish_post(update, context, "Pizza ist toll!")
             #todo make this method handle to full publishing process
+            # - maybe not smart as one will be sent directly and the other scheduled :)
 
     query.answer()
 
