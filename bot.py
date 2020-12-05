@@ -95,6 +95,7 @@ def submit(update: Update, context: CallbackContext) -> None:
             publish_post(update, context, "Pizza ist toll!")
             #todo make this method handle to full publishing process
             # - maybe not smart as one will be sent directly and the other scheduled :)
+        update.message.edit_text("HUUU")
 
     query.answer()
 
