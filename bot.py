@@ -128,8 +128,12 @@ def delete(context):
     context.bot.delete_message(chat_id=context.job.context, message_id=context.job.name)
 
 
-def error(update, context):
+def error(update: Update, context: CallbackContext):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
+    context.bot.send_message(
+        chat_id= -466851941,
+        text="Error @"+context.bot.username+"\n\nCaused by Update <code>"+str(update)+"</code>\n\nError: <code>"+str(context.error)+"</code>",
+        parse_mode=telegram.ParseMode.HTML)
 
 
 def main():
