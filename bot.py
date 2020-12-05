@@ -7,10 +7,22 @@ from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandle
 PORT = int(os.environ.get('PORT', 5000))
 TOKEN = '1317941240:AAHxIBg8Oq0g2dfVgTBK9PfNxa0JCNGXDXk'
 CHANNEL = -1001302593973
+VERIFIED_USERS = [703453307, 525147382]
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def verify(message: telegram.Message, context: CallbackContext):
+    current_chat_id = message.chat_id
+    if current_chat_id in set(VERIFIED_USERS):
+        return True
+    else:
+        context.bot.send_message(chat_id=current_chat_id, text="You're not a verfied user.")
+
+
+# do stuff
 
 
 def start(update, context):
@@ -27,15 +39,17 @@ def new_channel_post(update: Update, context: CallbackContext):
 def new_post(update: Update, context: CallbackContext):
     #  query = update.callback_query
     #  querydata = query.data
-    context.user_data["step"] = 1
 
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text="<u>🕓 New scheduled post</u>"
-             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-             "\nNow send the news in one message, please.",
-        parse_mode=telegram.ParseMode.HTML
-    )
+    if verify(update.message, context):
+        context.user_data["step"] = 1
+
+        context.bot.send_message(
+            chat_id=update.message.chat_id,
+            text="<u>🕓 New scheduled post</u>"
+                 "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
+                 "\nNow send the news in one message, please.",
+            parse_mode=telegram.ParseMode.HTML
+        )
 
 
 def new_breaking(update: Update, context: CallbackContext):
@@ -62,32 +76,22 @@ def incoming_text(update: Update, context: CallbackContext):
                 text="Submit post",
                 callback_data="3"
             )
-        ))
+            ))
 
 
 def submit(update: Update, context: CallbackContext) -> None:
-            query = update.callback_query
-            position = int(query.data)
+    query = update.callback_query
+    position = int(query.data)
 
-            if position == 3:
-                buttons = InlineKeyboardMarkup.from_button(
-                    InlineKeyboardButton("Proceed ➡", callback_data=str(position + 1)))
+    if position == 3:
+        buttons = InlineKeyboardMarkup.from_button(
+            InlineKeyboardButton("Proceed ➡", callback_data=str(position + 1)))
 
-            query.edit_message_text(text="hmmmm",
-                                    reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(text="Submit post",callback_data="4")),
-                                    parse_mode=telegram.ParseMode.HTML)
-            query.answer()
-
-
-
-
-
-
-
-
-
-
-
+    query.edit_message_text(text="hmmmm",
+                            reply_markup=InlineKeyboardMarkup.from_button(
+                                InlineKeyboardButton(text="Submit post", callback_data="4")),
+                            parse_mode=telegram.ParseMode.HTML)
+    query.answer()
 
 
 def choose_country(update: Update, context: CallbackContext, text):
