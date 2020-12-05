@@ -19,49 +19,36 @@ def verify(message: telegram.Message, context: CallbackContext):
     if current_chat_id in set(VERIFIED_USERS):
         return True
     else:
-        context.bot.send_message(chat_id=current_chat_id, text="You're not a verfied user.")
-
-
-# do stuff
+        context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
 def start(update, context):
-    update.message.reply_text("Hey :)\nIch bin noch nicht fertig!")
-
-
-def new_channel_post(update: Update, context: CallbackContext):
-    update.channel_post.edit_reply_markup(
-
-        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-            text="🔰 folge @militaernews für mehr 🔰", url="https://t.me/militaernews")))
+    if verify(update.message, context):
+        message_html(update,
+                     context,
+                     "Welcome human 🤖\nI'm here to ease the process of publishing for "
+                     "@militaernews.\n\n<b>Commands</b>\n/post\nSchedule a post 🕓\n\n/breaking\nPublish breaking "
+                     "news ‼️")
 
 
 def new_post(update: Update, context: CallbackContext):
-    #  query = update.callback_query
-    #  querydata = query.data
-
     if verify(update.message, context):
         context.user_data["step"] = 1
 
-        context.bot.send_message(
-            chat_id=update.message.chat_id,
-            text="<u>🕓 New scheduled post</u>"
-                 "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-                 "\nNow send the news in one message, please.",
-            parse_mode=telegram.ParseMode.HTML
-        )
+        message_html(update,
+                     context,
+                     "<u>🕓 New scheduled post</u>\n\n<b>Step " + str(context.user_data["step"]) +
+                     " of 3</b>\nNow send the news in one message, please.")
 
 
 def new_breaking(update: Update, context: CallbackContext):
-    context.user_data["step"] = 1
+    if verify(update.message, context):
+        context.user_data["step"] = 1
 
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text="<u>‼️ New breaking news</u>"
-             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-             "\nNow send the news in one message, please.",
-        parse_mode=telegram.ParseMode.HTML
-    )
+        message_html(update,
+                     context,
+                     "<u>‼️ New breaking news</u>\n\n<b>Step " + str(context.user_data["step"]) +
+                     " of 3</b>\nNow send the news in one message, please.")
 
 
 def incoming_text(update: Update, context: CallbackContext):
@@ -185,8 +172,8 @@ def error(update: Update, context: CallbackContext):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
     context.bot.send_message(
         chat_id=-1001338514957,
-        text="<b>Affected Bot</b>\n@" + context.bot.username +
-             "\n\n<b>Error</b>\n<code>" + str(context.error) +
+        text="<b>🤖 Affected Bot</b>\n@" + context.bot.username +
+             "\n\n<b>⚠ Error</b>\n<code>" + str(context.error) +
              "</code>\n\n<b>Caused by Update</b>\n<code>" + str(update) + "</code>",
         parse_mode=telegram.ParseMode.HTML)
 
@@ -196,8 +183,6 @@ def main():
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
-
-    dp.add_handler(MessageHandler(Filters.update.channel_post, new_channel_post))
 
     dp.add_handler(CommandHandler("post", new_post))
     dp.add_handler(CommandHandler("breaking", new_breaking))
