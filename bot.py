@@ -72,7 +72,7 @@ def incoming_text(update: Update, context: CallbackContext):
 
         context.user_data["step"] = 3  ## remove that^^ increase after album received.
 
-    elif current_step == 3:
+    elif current_step == 3: ##Sending media album on step 3 actually^^
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text="Please check for spelling mistakes and make sure everything is properly formatted before proceeding.",
@@ -118,6 +118,8 @@ def publish_post(update: Update, context: CallbackContext, text):
         text + "\nFolge @militaernews")
 
     context.user_data["step"] = 0
+
+    update.message.edit_text("Nachricht gesendet")
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
