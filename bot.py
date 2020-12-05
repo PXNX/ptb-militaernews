@@ -119,6 +119,15 @@ def publish_breaking(update: Update, context: CallbackContext, text):
             url="https://t.me/militaernews")))
 
 
+def cancel_editing(update: Update, context: CallbackContext):
+    if verify(update.message, context):
+        context.user_data["step"] = 1
+
+        message_html(update,
+                     context,
+                     "Editing this post was canceled. 🗑")
+
+
 def message_button_url(update, context, text, button_text, button_url):
     return context.bot.send_message(chat_id=update.message.chat_id,
                                     text=text,
@@ -186,6 +195,7 @@ def main():
 
     dp.add_handler(CommandHandler("post", new_post))
     dp.add_handler(CommandHandler("breaking", new_breaking))
+    dp.add_handler(CommandHandler("cacnel", cancel_editing))
 
     dp.add_handler(MessageHandler(Filters.text, incoming_text))
 
