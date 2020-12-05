@@ -32,7 +32,7 @@ def new_post(update: Update, context: CallbackContext, text):
 
     context.bot.send_message(
         chat_id=CHANNEL,
-        text=text+"\nFolge @militaernews",
+        text=text + "\nFolge @militaernews",
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
@@ -131,8 +131,10 @@ def delete(context):
 def error(update: Update, context: CallbackContext):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
     context.bot.send_message(
-        chat_id= -466851941,
-        text="Error @"+context.bot.username+"\n\nCaused by Update <code>"+str(update)+"</code>\n\nError: <code>"+str(context.error)+"</code>",
+        chat_id=-466851941,
+        text="Bot: @" + context.bot.username +
+             "\n\n<b>Error</b>\n<code>" + str(context.error) +
+             "</code>\n\n<b>Caused by Update</b>\n<code>" + str(update) + "</code>",
         parse_mode=telegram.ParseMode.HTML)
 
 
