@@ -14,16 +14,12 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def verify(update: Update, context: CallbackContext):
-    current_chat_id = update.message.chat_id
+def verify(message: telegram.Message, context: CallbackContext):
+    current_chat_id = message.chat_id
     if current_chat_id in set(VERIFIED_USERS):
         return True
     else:
-        #   context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
-
-        update.callback_query.answer(text='THIS IS AN ALERT', show_alert=True)
-
-        #context.bot.answer_callback_query(callback_query_id="submit",text="THIS IS AN ALERT", show_alert=True)
+        context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
 def start(update, context):
@@ -36,7 +32,7 @@ def start(update, context):
 
 
 def new_post(update: Update, context: CallbackContext):
-    if verify(update, context):
+    if verify(update.message, context):
         context.user_data["step"] = 1
 
         message_html(update,
@@ -46,7 +42,7 @@ def new_post(update: Update, context: CallbackContext):
 
 
 def new_breaking(update: Update, context: CallbackContext):
-    if verify(update, context):
+    if verify(update.message, context):
         context.user_data["step"] = 1
 
         message_html(update,
