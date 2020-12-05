@@ -38,47 +38,6 @@ def new_post(update: Update, context: CallbackContext, text):
             url="https://t.me/militaernews")))
 
 
-def new_member_join(update: Update, context: CallbackContext):
-    update.message.delete()
-
-    global join_usernames
-
-    for join_user in update.message.new_chat_members:
-
-        if join_user.name is not None:
-            join_user_name = join_user.name
-        else:
-            join_user_name = join_user.full_name
-
-        join_usernames.append(join_user_name)
-
-    if len(join_usernames) >= 15:
-        update.message.reply_text(
-            text="Hi {} 🤖\nWelcome to the group.\n\n"
-                 "<u>Group's rules</u>"
-                 "\n\n<b>1. Language</b>"
-                 "\nPlease use English or Hindi as an alternative."
-                 "\n\n<b>2. Links</b>"
-                 "\nSending links is not permitted."
-                 "\n\n<b>3. Forwarding</b>"
-                 "\nForwarding messages from other channels is not permitted"
-                 "\n\n<b>4. Respect</b>"
-                 "\nWe're all one big community. Don't be rude."
-                 "\n\n<b>5. Spam</b>"
-                 "\nAvoid sending stuff multiple times. Flooding the chat won't give you more attention."
-                 "\n\n<b>6. Files</b>"
-                 "\nAvoid sending files over 50Mb, if not ultimately needed."
-                 "\n\n<b>7. Advertisements</b>"
-                 "\nSelf-promotion is not permitted."
-                 "\n\n<b>8. Content</b>"
-                 "\nGore, porn and anything alike is absolutely prohibited.".format(', '.join(join_usernames)),
-            parse_mode=telegram.ParseMode.HTML)
-        join_usernames = []
-
-
-# def post(update: Update, context: CallbackContext):
-
-
 def message_button_url(update, context, text, button_text, button_url):
     return context.bot.send_message(chat_id=update.message.chat_id,
                                     text=text,
