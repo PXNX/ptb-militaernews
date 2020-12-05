@@ -131,7 +131,7 @@ def delete(context):
 def error(update: Update, context: CallbackContext):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
     context.bot.send_message(
-        chat_id=-466851941,
+        chat_id=-1001338514957,
         text="Bot: @" + context.bot.username +
              "\n\n<b>Error</b>\n<code>" + str(context.error) +
              "</code>\n\n<b>Caused by Update</b>\n<code>" + str(update) + "</code>",
