@@ -19,7 +19,8 @@ def verify(message: telegram.Message, context: CallbackContext):
     if current_chat_id in set(VERIFIED_USERS):
         return True
     else:
-        context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
+        #   context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
+        context.bot.answer_callback_query(text="THIS IS AN ALERT", show_alert=True)
 
 
 def start(update, context):
@@ -27,8 +28,8 @@ def start(update, context):
         message_html(update,
                      context,
                      "Welcome human 🤖\nI'm here to ease the process of publishing for "
-                     "@militaernews.\n\n<b>Commands</b>\n/post\nSchedule a post 🕓\n\n/breaking\nPublish breaking "
-                     "news ‼️")
+                     "@militaernews.\n\n/post\nSchedule a post 🕓\n\n/breaking\nPublish breaking "
+                     "news ‼/cancel\nCancel current editing session 🗑️")
 
 
 def new_post(update: Update, context: CallbackContext):
