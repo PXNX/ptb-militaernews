@@ -57,8 +57,10 @@ def incoming_text(update: Update, context: CallbackContext):
                      context,
                      "Please start a new editing session first.\n\n/post\nSchedule a post 🕓\n\n/breaking\nPublish "
                      "breaking news ‼")
+
     elif context.user_data["step"] == 1:
         choose_country(update, context, update.message.text)
+
     elif context.user_data["step"] == 2:
         context.bot.send_message(
             chat_id=update.message.chat_id,
@@ -76,14 +78,17 @@ def submit(update: Update, context: CallbackContext) -> None:
     position = int(query.data)
 
     if position == 3:
-        buttons = InlineKeyboardMarkup.from_button(
-            InlineKeyboardButton("Proceed ➡", callback_data=str(position + 1)))
-
-    query.edit_message_text(text="hmmmm",
-                            reply_markup=InlineKeyboardMarkup.from_button(
-                                InlineKeyboardButton(text="Submit post", callback_data="4")),
-                            parse_mode=telegram.ParseMode.HTML)
-    query.answer()
+        query.edit_message_text(text="hmmmm",
+                                reply_markup=InlineKeyboardMarkup.from_button(
+                                    InlineKeyboardButton(text="Submit post", callback_data="4")),
+                                parse_mode=telegram.ParseMode.HTML)
+        query.answer()
+    elif position == 4:
+        query.edit_message_text(text="hmmmm",
+                                reply_markup=InlineKeyboardMarkup.from_button(
+                                    InlineKeyboardButton(text="Submit post", callback_data="4")),
+                                parse_mode=telegram.ParseMode.HTML)
+        query.answer()
 
 
 def choose_country(update: Update, context: CallbackContext, text):
@@ -99,29 +104,28 @@ def choose_country(update: Update, context: CallbackContext, text):
 
 
 def publish_post(update: Update, context: CallbackContext, text):
+    broadcast_html(
+        context,
+        text + "\nFolge @militaernews")
+
+    context.user_data["step"] = 0
+
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
-
-    context.bot.send_message(
-        chat_id=CHANNEL,
-        text=text + "\nFolge @militaernews",
-        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-            text="🔰 Weitere Meldungen 🔰",
-            url="https://t.me/militaernews")))
 
 
 def publish_breaking(update: Update, context: CallbackContext, text):
+    broadcast_html(
+        context,
+        "#EILMELDUNG ‼️" + text + "\nFolge @militaernews")
+
+    context.user_data["step"] = 0
+
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
-
-    context.bot.send_message(
-        chat_id=CHANNEL,
-        text="#EILMELDUNG ‼️" + text + "\nFolge @militaernews",
-        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-            text="🔰 Weitere Meldungen 🔰",
-            url="https://t.me/militaernews")))
+    # Maybe add button to choose between new post and new breaking :)
 
 
 def cancel_editing(update: Update, context: CallbackContext):
@@ -133,53 +137,20 @@ def cancel_editing(update: Update, context: CallbackContext):
                      "Editing this post was canceled. 🗑")
 
 
-def message_button_url(update, context, text, button_text, button_url):
-    return context.bot.send_message(chat_id=update.message.chat_id,
-                                    text=text,
-                                    parse_mode=telegram.ParseMode.HTML,
-                                    reply_markup=InlineKeyboardMarkup.from_button(
-                                        InlineKeyboardButton(text=button_text, url=button_url)))
+def broadcast_html(context: CallbackContext, text):
+    context.bot.send_message(
+        chat_id=CHANNEL,
+        text=text,
+        parse_mode=telegram.ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+            text="🔰 Weitere Meldungen 🔰",
+            url="https://t.me/militaernews")))
 
 
 def message_html(update, context, text):
     return context.bot.send_message(chat_id=update.message.chat_id,
                                     text=text,
                                     parse_mode=telegram.ParseMode.HTML)
-
-
-def delay_group_button_url(update, context, text, button_text, button_url):
-    # update.message.delete() # TODO REQUIRES ADMIN!!!
-
-    if update.message.chat_id == -1001374176745:
-        reply_message = message_button_url(update, context, text, button_text, button_url)
-
-    else:
-        reply_message = message_button_url(update,
-                                           context,
-                                           "Command can only be used in the community support group.",
-                                           "Join »",
-                                           "https://t.me/realme_support")
-
-    context.job_queue.run_once(delete, 300, context=update.message.chat_id, name=str(reply_message.message_id))
-
-
-def delay_group(update, context, text):
-    # update.message.delete() # REQUIRES ADMIN!!!
-
-    if update.message.chat_id == -1001374176745:
-        reply_message = message_html(update, context, text)
-    else:
-        reply_message = message_button_url(update,
-                                           context,
-                                           "Command can only be used in the community support group.",
-                                           "Join »",
-                                           "https://t.me/realme_support")
-
-    context.job_queue.run_once(delete, 300, context=update.message.chat_id, name=str(reply_message.message_id))
-
-
-def delete(context):
-    context.bot.delete_message(chat_id=context.job.context, message_id=context.job.name)
 
 
 def error(update: Update, context: CallbackContext):
