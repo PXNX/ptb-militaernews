@@ -29,7 +29,7 @@ def start(update, context):
                      context,
                      "Welcome human 🤖\nI'm here to ease the process of publishing for "
                      "@militaernews.\n\n/post\nSchedule a post 🕓\n\n/breaking\nPublish breaking "
-                     "news ‼/cancel\nCancel current editing session 🗑️")
+                     "news ‼\n\n/cancel\nCancel current editing session 🗑️")
 
 
 def new_post(update: Update, context: CallbackContext):
@@ -53,7 +53,12 @@ def new_breaking(update: Update, context: CallbackContext):
 
 
 def incoming_text(update: Update, context: CallbackContext):
-    if context.user_data["step"] == 1:
+    if context.user_data["step"] == 0:
+        message_html(update,
+                     context,
+                     "Please start a new editing session first.\n\n/post\nSchedule a post 🕓\n\n/breaking\nPublish "
+                     "breaking news ‼")
+    elif context.user_data["step"] == 1:
         choose_country(update, context, update.message.text)
     elif context.user_data["step"] == 2:
         context.bot.send_message(
@@ -122,7 +127,7 @@ def publish_breaking(update: Update, context: CallbackContext, text):
 
 def cancel_editing(update: Update, context: CallbackContext):
     if verify(update.message, context):
-        context.user_data["step"] = 1
+        context.user_data["step"] = 0
 
         message_html(update,
                      context,
@@ -196,7 +201,7 @@ def main():
 
     dp.add_handler(CommandHandler("post", new_post))
     dp.add_handler(CommandHandler("breaking", new_breaking))
-    dp.add_handler(CommandHandler("cacnel", cancel_editing))
+    dp.add_handler(CommandHandler("cancel", cancel_editing))
 
     dp.add_handler(MessageHandler(Filters.text, incoming_text))
 
