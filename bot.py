@@ -57,8 +57,37 @@ def incoming_text(update: Update, context: CallbackContext):
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text="jetz sollte man Bilder etc. schicken",
-            parse_mode=telegram.ParseMode.HTML
-        )
+            parse_mode=telegram.ParseMode.HTML,
+            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                text="Submit post",
+                callback_data="3"
+            )
+        ))
+
+
+def button(update: Update, context: CallbackContext) -> None:
+            query = update.callback_query
+            position = int(query.data)
+
+            if position == 3:
+                buttons = InlineKeyboardMarkup.from_button(
+                    InlineKeyboardButton("Proceed ➡", callback_data=str(position + 1)))
+
+            query.edit_message_text(text="hmmmm",
+                                    reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(text="Submit post",callback_data="4")),
+                                    parse_mode=telegram.ParseMode.HTML)
+            query.answer()
+
+
+
+
+
+
+
+
+
+
+
 
 
 def choose_country(update: Update, context: CallbackContext, text):
