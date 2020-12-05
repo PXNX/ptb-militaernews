@@ -25,16 +25,16 @@ def new_channel_post(update: Update, context: CallbackContext):
             text="🔰 folge @militaernews für mehr 🔰", url="https://t.me/militaernews")))
 
 
-def new_post(update: Update, context: CallbackContext):
+def new_post(update: Update, context: CallbackContext, text):
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
 
     context.bot.send_message(
         chat_id=CHANNEL,
-        text="Testnachricht",
+        text=text+"\nFolge @militaernews",
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-            text="🔰 Folge @militaernews 🔰",
+            text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
 
 
