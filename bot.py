@@ -54,16 +54,17 @@ def new_breaking(update: Update, context: CallbackContext):
 
 
 def incoming_text(update: Update, context: CallbackContext):
-    if context.user_data["step"] == 0:
+    current_step = context.user_data["step"]
+    if current_step == 0:
         message_html(update,
                      context,
                      "Please start a new editing session first.\n\n/post\nSchedule a post 🕓\n\n/breaking\nPublish "
                      "breaking news ‼")
 
-    elif context.user_data["step"] == 1:
+    elif current_step == 1:
         choose_country(update, context, update.message.text)
 
-    elif context.user_data["step"] == 2:
+    elif current_step == 2:
         message_html(update,
                      context,
                      "Step " + str(context.user_data["step"]) +
@@ -71,7 +72,7 @@ def incoming_text(update: Update, context: CallbackContext):
 
         context.user_data["step"] = 3  ## remove that^^ increase after album received.
 
-    elif context.user_data["step"] == 3:
+    elif current_step == 3:
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text="Please check for spelling mistakes and make sure everything is properly formatted before proceeding.",
