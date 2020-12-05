@@ -65,7 +65,7 @@ def incoming_text(update: Update, context: CallbackContext):
         ))
 
 
-def button(update: Update, context: CallbackContext) -> None:
+def submit(update: Update, context: CallbackContext) -> None:
             query = update.callback_query
             position = int(query.data)
 
@@ -201,6 +201,8 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, incoming_text))
 
     # dp.add_handler(MessageHandler(Filters.a, incoming_media))
+
+    dp.add_handler(CallbackQueryHandler(submit))
 
     dp.add_error_handler(error)  # REMOVE FOR STACKTRACE!!
 
