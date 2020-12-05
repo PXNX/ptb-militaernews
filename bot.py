@@ -34,6 +34,7 @@ def start(update, context):
 def new_post(update: Update, context: CallbackContext):
     if verify(update.message, context):
         context.user_data["step"] = 1
+        context.user_data["breaking"] = False
 
         message_html(update,
                      context,
@@ -44,6 +45,7 @@ def new_post(update: Update, context: CallbackContext):
 def new_breaking(update: Update, context: CallbackContext):
     if verify(update.message, context):
         context.user_data["step"] = 1
+        context.user_data["breaking"] = True
 
         message_html(update,
                      context,
@@ -84,11 +86,12 @@ def submit(update: Update, context: CallbackContext) -> None:
                                 parse_mode=telegram.ParseMode.HTML)
         query.answer()
     elif position == 4:
-        query.edit_message_text(text="hmmmm",
-                                reply_markup=InlineKeyboardMarkup.from_button(
-                                    InlineKeyboardButton(text="Submit post", callback_data="4")),
-                                parse_mode=telegram.ParseMode.HTML)
-        query.answer()
+        if context.user_data["breaking"]:
+            publish_breaking(update, context, "Pizza ist toll!")
+        else:
+            publish_post(update, context, "Pizza ist toll!")
+
+    query.answer()
 
 
 def choose_country(update: Update, context: CallbackContext, text):
@@ -125,16 +128,17 @@ def publish_breaking(update: Update, context: CallbackContext, text):
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
-    # Maybe add button to choose between new post and new breaking :)
+# Maybe add button to choose between new post and new breaking :)
 
 
 def cancel_editing(update: Update, context: CallbackContext):
     if verify(update.message, context):
         context.user_data["step"] = 0
 
-        message_html(update,
-                     context,
-                     "Editing this post was canceled. 🗑")
+        message_html(
+            update,
+            context,
+            "Editing this post was canceled. 🗑")
 
 
 def broadcast_html(context: CallbackContext, text):
