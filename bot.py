@@ -64,13 +64,21 @@ def incoming_text(update: Update, context: CallbackContext):
         choose_country(update, context, update.message.text)
 
     elif context.user_data["step"] == 2:
+        context.user_data["step"] = 1 ## remove that^^ increase after album received.
+
+        message_html(update,
+                     context,
+                     "Step " + str(context.user_data["step"]) +
+                     " of 3</b>\nNow send media as one album, please.")
+
+    elif context.user_data["step"] == 3:
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text="jetz sollte man Bilder etc. schicken",
             parse_mode=telegram.ParseMode.HTML,
             reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
                 text="Submit post",
-                callback_data="3"
+                callback_data="1"
             )
             ))
 
@@ -79,17 +87,12 @@ def submit(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     position = int(query.data)
 
-    if position == 3:
-        query.edit_message_text(text="hmmmm",
-                                reply_markup=InlineKeyboardMarkup.from_button(
-                                    InlineKeyboardButton(text="Submit post", callback_data="4")),
-                                parse_mode=telegram.ParseMode.HTML)
-        query.answer()
-    elif position == 4:
+    if position == 1:
         if context.user_data["breaking"]:
             publish_breaking(update, context, "Pizza ist toll!")
         else:
             publish_post(update, context, "Pizza ist toll!")
+            #todo make this method handle to full publishing process
 
     query.answer()
 
@@ -121,7 +124,7 @@ def publish_post(update: Update, context: CallbackContext, text):
 def publish_breaking(update: Update, context: CallbackContext, text):
     broadcast_html(
         context,
-        "#EILMELDUNG ‼️" + text + "\nFolge @militaernews")
+        "#EILMELDUNG ‼️\n\n" + text + "\nFolge @militaernews")
 
     context.user_data["step"] = 0
 
