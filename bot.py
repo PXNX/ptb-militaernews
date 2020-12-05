@@ -31,8 +31,8 @@ def new_channel_post(update: Update, context: CallbackContext):
 def new_post(update: Update, context: CallbackContext):
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text="<i>🕓 New scheduled post</i>"
-             "\n<b>Step 1 of 3</b>"+
+        text="<b>🕓 New scheduled post</b>"
+             "\n\n<i>Step 1 of 3</i>"+
         "\nSend the news in one message, please.",
         parse_mode=telegram.ParseMode.HTML
     )
@@ -42,8 +42,8 @@ def new_post(update: Update, context: CallbackContext):
 def new_breaking(update: Update, context: CallbackContext):
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text="<i>‼️ New breaking news</i>"
-             "\n<b>Step 1 of 3</b>" +
+        text="<b>‼️ New breaking news</b>"
+             "\n\n<i>Step 1 of 3</i>" +
              "\nSend the news in one message, please.",
         parse_mode=telegram.ParseMode.HTML
     )
