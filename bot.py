@@ -67,7 +67,7 @@ def incoming_text(update: Update, context: CallbackContext):
     elif current_step == 2:
         message_html(update,
                      context,
-                     "Step " + str(context.user_data["step"]) +
+                     "<b>Step " + str(context.user_data["step"]) +
                      " of 3</b>\nNow send media as one album, please.")
 
         context.user_data["step"] = 3  ## remove that^^ increase after album received.
@@ -106,7 +106,8 @@ def choose_country(update: Update, context: CallbackContext, text):
         chat_id=update.message.chat_id,
         text="<u>‼️ New breaking news</u>"
              "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-             "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die Hashtags automatisch dazu?",
+             "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
+             "Hashtags automatisch dazu?",
         parse_mode=telegram.ParseMode.HTML
     )
 
