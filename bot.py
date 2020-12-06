@@ -76,9 +76,10 @@ def incoming_text(update: Update, context: CallbackContext):
     elif current_step == 3:  ##Sending media album on step 3 actually^^
         group = update.message.media_group_id
 
-        print("------- group: "+str(group))
+        print("------- group: " + str(group))
+        print("------- message: " + str(context.user_data["message"]))
 
-      #  context.bot.send_media_group(update.message.chat_id, media=group)
+        #  context.bot.send_media_group(update.message.chat_id, media=group)
 
         context.bot.send_message(
             chat_id=update.message.chat_id,
@@ -118,8 +119,8 @@ def choose_country(update: Update, context: CallbackContext, text):
         chat_id=update.message.chat_id,
         text="<u>‼️ New breaking news</u>"
              "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-            "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
-          "Hashtags automatisch dazu?",
+             "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
+             "Hashtags automatisch dazu?",
         parse_mode=telegram.ParseMode.HTML
     )
 
