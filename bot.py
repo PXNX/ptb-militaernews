@@ -114,21 +114,11 @@ def choose_country(update: Update, context: CallbackContext, text):
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text="*bold text*_italic text_" +
-             "[inline URL](http://www.example.com/)" +
-             "[inline mention of a user](tg://user?id=123456789)" +
-             "`inline fixed-width code`" +
-             "```" +
-             "pre-formatted fixed-width code block" +
-             "```" +
-             "```python" +
-             "pre-formatted fixed-width code block written in the Python programming language" +
-             "```",
-        # text="<u>‼️ New breaking news</u>"
-        #     "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-        #    "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
-        #   "Hashtags automatisch dazu?",
-        parse_mode=telegram.ParseMode.MARKDOWN_V2
+        text="<u>‼️ New breaking news</u>"
+             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
+            "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
+          "Hashtags automatisch dazu?",
+        parse_mode=telegram.ParseMode.HTML
     )
 
 
