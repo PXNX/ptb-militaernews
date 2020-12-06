@@ -59,9 +59,10 @@ def incoming_text(update: Update, context: CallbackContext):
         message_html(update,
                      context,
                      "Please start a new editing session first.\n\n/post\nSchedule a post 🕓\n\n/breaking\nPublish "
-                     "breaking news ‼")
+                     "breaking news ‼")  ##replace with buttons??
 
     elif current_step == 1:
+        context.user_data["message"] = update.message.text
         choose_country(update, context, update.message.text)
 
     elif current_step == 2:
@@ -72,7 +73,7 @@ def incoming_text(update: Update, context: CallbackContext):
 
         context.user_data["step"] = 3  ## remove that^^ increase after album received.
 
-    elif current_step == 3: ##Sending media album on step 3 actually^^
+    elif current_step == 3:  ##Sending media album on step 3 actually^^
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text="Please check for spelling mistakes and make sure everything is properly formatted before proceeding.",
@@ -89,13 +90,17 @@ def submit(update: Update, context: CallbackContext) -> None:
     position = int(query.data)
 
     if position == 1:
+
+        text = context.user_data["message"] ###add country or so here??
+
         if context.user_data["breaking"]:
-            publish_breaking(update, context, "Pizza ist toll!")
+            publish_breaking(update, context, text)
         else:
             publish_post(update, context, "Pizza ist toll!")
-            #todo make this method handle to full publishing process
+            # todo make this method handle to full publishing process
             # - maybe not smart as one will be sent directly and the other scheduled :)
-        update.message.edit_text("HUUU")
+        update.message.edit_text(
+            "HUUU")  ###########TODO find out what's the correct message to get rid of that button :)
 
     query.answer()
 
@@ -120,7 +125,8 @@ def publish_post(update: Update, context: CallbackContext, text):
 
     context.user_data["step"] = 0
 
-    update.message.edit_text("Nachricht gesendet")
+    update.message.edit_text(
+        "Nachricht gesendet")  ###########TODO find out what's the correct message to get rid of that button :)
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
@@ -137,12 +143,15 @@ def publish_breaking(update: Update, context: CallbackContext, text):
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
+
+
 # Maybe add button to choose between new post and new breaking :)
 
 
 def cancel_editing(update: Update, context: CallbackContext):
     if verify(update.message, context):
         context.user_data["step"] = 0
+        context.user_data["message"] = ""
 
         message_html(
             update,
@@ -192,7 +201,7 @@ def main():
 
     dp.add_handler(CallbackQueryHandler(submit))
 
- #   dp.add_error_handler(error)  # REMOVE FOR STACKTRACE!!
+    #   dp.add_error_handler(error)  # REMOVE FOR STACKTRACE!!
 
     updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
     updater.bot.setWebhook('https://ptb-militaernews.herokuapp.com/' + TOKEN)
