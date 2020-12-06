@@ -74,6 +74,10 @@ def incoming_text(update: Update, context: CallbackContext):
         context.user_data["step"] = 3  ## remove that^^ increase after album received.
 
     elif current_step == 3:  ##Sending media album on step 3 actually^^
+        group = update.message.media_group_id
+
+        context.bot.send_media_group(update.message.chat_id, media=group)
+
         context.bot.send_message(
             chat_id=update.message.chat_id,
             text="Please check for spelling mistakes and make sure everything is properly formatted before proceeding.",
@@ -91,12 +95,12 @@ def submit(update: Update, context: CallbackContext) -> None:
 
     if position == 1:
 
-        text = context.user_data["message"] ###add country or so here??
+        text = context.user_data["message"]  ###add country or so here??
 
         if context.user_data["breaking"]:
             publish_breaking(update, context, text)
         else:
-            publish_post(update, context, "Pizza ist toll!")
+            publish_post(update, context, text)
             # todo make this method handle to full publishing process
             # - maybe not smart as one will be sent directly and the other scheduled :)
         update.message.edit_text(
@@ -110,11 +114,21 @@ def choose_country(update: Update, context: CallbackContext, text):
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text="<u>‼️ New breaking news</u>"
-             "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
-             "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
-             "Hashtags automatisch dazu?",
-        parse_mode=telegram.ParseMode.HTML
+        text="*bold text*_italic text_" +
+             "[inline URL](http://www.example.com/)" +
+             "[inline mention of a user](tg://user?id=123456789)" +
+             "`inline fixed-width code`" +
+             "```" +
+             "pre-formatted fixed-width code block" +
+             "```" +
+             "```python" +
+             "pre-formatted fixed-width code block written in the Python programming language" +
+             "```",
+        # text="<u>‼️ New breaking news</u>"
+        #     "\n\n<b>Step " + str(context.user_data["step"]) + " of 3</b>" +
+        #    "\nPlease list the countries - oder soll das direkt in die Nachricht eingebaut werden und dann nur die "
+        #   "Hashtags automatisch dazu?",
+        parse_mode=telegram.ParseMode.MARKDOWN_V2
     )
 
 
