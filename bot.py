@@ -201,6 +201,9 @@ def main():
 
     dp.add_handler(MessageHandler(Filters.text, incoming_text))
 
+    dp.add_handler(MessageHandler(Filters.video, incoming_text))
+    dp.add_handler(MessageHandler(Filters.photo, incoming_text))
+
     # dp.add_handler(MessageHandler(Filters.a, incoming_media))
 
     dp.add_handler(CallbackQueryHandler(submit))
