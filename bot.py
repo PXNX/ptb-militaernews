@@ -76,10 +76,19 @@ def incoming_text(update: Update, context: CallbackContext):
     elif current_step == 3:  ##Sending media album on step 3 actually^^
         group = update.message.media_group_id
 
+        update.message.forward(chat_id=CHANNEL)
+
+        photo =  update.message.photo
+
         print("------- group: " + str(group))
+        print("------- group: " + str(photo))
         print("------- message: " + str(context.user_data["message"]))
 
         #  context.bot.send_media_group(update.message.chat_id, media=group)
+
+        context.bot.send_media_group(chat_id=update.message.chat_id, media=[group])
+
+        context.bot.send_media_group(chat_id=update.message.chat_id, media=[photo])
 
         context.bot.send_message(
             chat_id=update.message.chat_id,
