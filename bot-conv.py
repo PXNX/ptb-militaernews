@@ -85,8 +85,6 @@ def photo(update: Update, context: CallbackContext) -> int:
 
     return message_preview(update, context)
 
-    return PUBLISH
-
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
     return message_preview(update, context)
