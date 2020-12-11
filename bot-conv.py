@@ -42,7 +42,7 @@ def verify(message: Message, context: CallbackContext):
         context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
-def start(update: Update, context: CallbackContext)-> int:
+def start(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
         return TEXT
@@ -167,7 +167,7 @@ def main() -> None:
         entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                       MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
         states={
-            TEXT: [MessageHandler(Filters.text, photo)],
+            TEXT: [MessageHandler(Filters.regex('.*'), photo)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
@@ -179,11 +179,10 @@ def main() -> None:
 
     dp.add_error_handler(error)
 
-    updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
+    updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
     updater.bot.setWebhook('https://ptb-militaernews.herokuapp.com/' + TOKEN)
 
     updater.start_polling()
-
     updater.idle()
 
 
