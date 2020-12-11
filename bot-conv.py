@@ -93,7 +93,7 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
 def message_preview(update: Update, context: CallbackContext) -> int:
     update.message.reply_text("<b>Step 3 of 3</b>\nPreview:",
                               parse_mode=ParseMode.HTML,
-                              reply_markup=ReplyKeyboardMarkup([["Submit post 📢", "Cancel 🗑"]],
+                              reply_markup=ReplyKeyboardMarkup([["Submit post 📢", "Cancel 📣"]],
                                                                one_time_keyboard=True,
                                                                resize_keyboard=True))
 
@@ -117,7 +117,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     else:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️", "Cancel 🗑"]],
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️", "Cancel 📣"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
 
@@ -164,7 +164,7 @@ def broadcast_html(context: CallbackContext, text):
 
 def cancel(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
-        text='<b>Editing this post was canceled.</b> 🗑\n\nFeel free to create a new one.',
+        text='<b>Editing this post was canceled.</b> 📣\n\nFeel free to create a new one.',
         parse_mode=ParseMode.HTML,
         reply_markup=START_KEYBOARD)
     return ConversationHandler.END
@@ -206,7 +206,7 @@ def main() -> None:
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking 📢'), publish_breaking),
                       MessageHandler(Filters.regex('Schedule post 📝'), publish_post),
-                      MessageHandler(Filters.regex('Cancel 🗑'), cancel),
+                      MessageHandler(Filters.regex('Cancel 📣'), cancel),
                       ]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
