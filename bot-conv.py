@@ -86,6 +86,7 @@ def photo(update: Update, context: CallbackContext) -> int:
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
+    # maybe something like getting the photo from a local storage
     return message_preview(update, context)
 
 
@@ -95,43 +96,33 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                               reply_markup=ReplyKeyboardMarkup([["Submit post 📣", "Cancel 🗑"]],
                                                                one_time_keyboard=True,
                                                                resize_keyboard=True))
-
-    if context.user_data["breaking"]:
-
-        context.bot.send_message(
-            chat_id=update.message.chat_id,
-            text="#EILMELDUNG ‼️\n\n" + context.user_data["message"] + "\nFolge @militaernews",
-            parse_mode=ParseMode.HTML,
-            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                text="🔰 Weitere Meldungen 🔰",
-                url="https://t.me/militaernews")))
-
-    # context.bot.send_media_group(update.message.chat_id, context.user_data["files"])
-
-    #  update.message.reply_text("<b>Step 3 of 3</b>\nPreview:",
-    #                            parse_mode=ParseMode.HTML,
-    #                            reply_markup=ReplyKeyboardMarkup([["Submit breaking 📣"]],
-    #                                                             one_time_keyboard=True,
-    #                                                             resize_keyboard=True))
-    else:
-        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
-                                  parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️", "Cancel 🗑"]],
-                                                                   one_time_keyboard=True,
-                                                                   resize_keyboard=True))
-
-    #  + context.user_data["message"]
-
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=context.user_data["message"] + "\nFolge @militaernews",
+        parse_mode=ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+            text="🔰 Weitere Meldungen 🔰",
+            url="https://t.me/militaernews")))
     return PUBLISH
 
 
 ## What about SUBMIT and CANCEL instead?
 
 
-def publish_breaking(update: Update, context: CallbackContext) -> int:
-    broadcast_html(
-        context,
-        "#EILMELDUNG ‼️\n\n" + context.user_data["message"] + "\nFolge @militaernews")
+def publish(update: Update, context: CallbackContext) -> int:
+    if context.user_data["breaking"]:
+        broadcast_html(
+            context,
+            "#EILMELDUNG ‼️\n\n" + context.user_data["message"] + "\nFolge @militaernews")
+    else:
+        context.bot.send_message(
+            chat_id=CHANNEL,
+            text=context.user_data["message"] + "\nFolge @militaernews",
+            parse_mode=ParseMode.HTML,
+
+            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                text="🔰 Weitere Meldungen 🔰",
+                url="https://t.me/militaernews")))
 
     return publish_success(update, context)
 
@@ -144,13 +135,6 @@ def publish_post(update: Update, context: CallbackContext) -> int:
     return publish_success(update, context)
 
 
-def publish_success(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text("<b>Message sent</b> ✅\nCompose a new one?",
-                              parse_mode=ParseMode.HTML,
-                              reply_markup=START_KEYBOARD)
-    return ConversationHandler.END
-
-
 def broadcast_html(context: CallbackContext, text):
     context.bot.send_message(
         chat_id=CHANNEL,
@@ -159,6 +143,13 @@ def broadcast_html(context: CallbackContext, text):
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
+
+
+def publish_success(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text("<b>Message sent</b> ✅\nCompose a new one?",
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=START_KEYBOARD)
+    return ConversationHandler.END
 
 
 def cancel(update: Update, context: CallbackContext) -> int:
@@ -203,8 +194,7 @@ def main() -> None:
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
-            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish_breaking),
-                      MessageHandler(Filters.regex('Schedule post 📝'), publish_post),
+            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish),
                       MessageHandler(Filters.regex('Cancel 🗑'), cancel),
                       ]},
         fallbacks=[CommandHandler('cancel', cancel)],
