@@ -63,6 +63,11 @@ def new_breaking(update: Update, context: CallbackContext) -> int:
                                       "message, please.")
         return TEXT
 
+def text(update: Update, context: CallbackContext) -> int:
+    if verify(update.message, context):
+        message_html(update, context, "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
+                                      "message, please.")
+        return PHOTO
 
 def photo(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
@@ -167,7 +172,7 @@ def main() -> None:
         entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                       MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
         states={
-            TEXT: [MessageHandler(Filters.regex('.*'), photo)],
+            TEXT: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
