@@ -203,7 +203,7 @@ def main() -> None:
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
-            PUBLISH: [MessageHandler(Filters.regex('Submit breaking 📣'), publish_breaking),
+            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish_breaking),
                       MessageHandler(Filters.regex('Schedule post 📝'), publish_post),
                       MessageHandler(Filters.regex('Cancel 🗑'), cancel),
                       ]},
