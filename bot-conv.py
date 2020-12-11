@@ -50,25 +50,25 @@ def start(update: Update, context: CallbackContext):
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = False
-        return message_new(update, context, "🕓 <u>New scheduled post</u>")
+        return message_new(update, context, "<u>New scheduled post</u> 🕓")
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = True
-        return message_new(update, context, "‼️ <u>New breaking news</u>")
+        return message_new(update, context, "<u>New breaking news</u> ‼️")
 
 
 def message_new(update: Update, context: CallbackContext, text) -> int:
     message_html(update, context,
-                 text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message.")
+                 text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message")
     return NEWS
 
 
 def text(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["message"] = update.message.text
-        update.message.reply_text("<b>Step 2 of 3</b>\nSend all media to be added as an album.",
+        update.message.reply_text("<b>Step 2 of 3</b>\nSend photos or videos as an album",
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([["Use placeholder 🖼️"]]))
         return PHOTO
@@ -91,7 +91,7 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text("<b>Step 3 of 3</b>\nPreview:",
+    update.message.reply_text("<b>Step 3 of 3</b>\nPreview the generated post",
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([["Submit post 📣", "Cancel 🗑"]],
                                                                one_time_keyboard=True,
@@ -164,7 +164,7 @@ def broadcast_html(context: CallbackContext, text):
 
 def cancel(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
-        text='<b>Editing this post was canceled.</b> 🗑\n\nFeel free to create a new one.',
+        text='<b>Editing this post was cancelled</b> 🗑\nFeel free to create a new one',
         parse_mode=ParseMode.HTML,
         reply_markup=START_KEYBOARD)
     return ConversationHandler.END
