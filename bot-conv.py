@@ -80,12 +80,16 @@ def photo(update: Update, context: CallbackContext) -> int:
 
     if context.user_data["breaking"]:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
-                              parse_mode=ParseMode.HTML,
-                              reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]]))
+                                  parse_mode=ParseMode.HTML,
+                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]],
+                                                                   one_time_keyboard=True,
+                                                                   resize_keyboard=True))
     else:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post📝️"]]))
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post📝️"]],
+                                                                   one_time_keyboard=True,
+                                                                   resize_keyboard=True))
 
     return PUBLISH
 
