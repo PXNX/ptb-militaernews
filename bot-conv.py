@@ -51,32 +51,41 @@ def start(update: Update, context: CallbackContext) -> int:
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = False
-        message_html(update, context, "🕓 <u>New scheduled post</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
-                                      "message, please.")
+        message_html(update, context,
+                     "🕓 <u>New scheduled post</u>\n\n<b>Step 1 of 3</b>\nSend the news in one message.")
         return TEXT
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = True
-        message_html(update, context, "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
-                                      "message, please.")
+        message_html(update, context,
+                     "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nSend the news in one message.")
         return TEXT
+
 
 def text(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
-        message_html(update, context, "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
-                                      "message, please.")
+        update.message.reply_text("<b>Step 2 of 3</b>\nSend all media to be added as an album.",
+                                  parse_mode=ParseMode.HTML,
+                                  reply_markup=ReplyKeyboardMarkup([["Use placeholder🖼️"]]))
         return PHOTO
+
 
 def photo(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
     photo_file = update.message.photo[-1].get_file()
     photo_file.download('user_photo.jpg')
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
-    update.message.reply_text(
-        'Gorgeous! Now, send me your location please, ' 'or send /skip if you don\'t want to.'
-    )
+
+    if context.user_data["breaking"]:
+        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]]))
+    else:
+        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
+                                  parse_mode=ParseMode.HTML,
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post📝️"]]))
 
     return PUBLISH
 
