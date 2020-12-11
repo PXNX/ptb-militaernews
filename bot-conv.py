@@ -170,6 +170,8 @@ def main() -> None:
     updater = Updater(TOKEN)
     dp = updater.dispatcher
 
+    dp.add_handler(CommandHandler('start', start))
+
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
