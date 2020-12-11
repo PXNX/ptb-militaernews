@@ -31,7 +31,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-TEXT, PHOTO, PUBLISH = range(3)
+NEWS, PHOTO, PUBLISH = range(3)
 
 
 def verify(message: Message, context: CallbackContext):
@@ -45,23 +45,25 @@ def verify(message: Message, context: CallbackContext):
 def start(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
-        return TEXT
+        return NEWS
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = False
-        message_html(update, context,
-                     "🕓 <u>New scheduled post</u>\n\n<b>Step 1 of 3</b>\nSend the news in one message.")
-        return TEXT
+        return message_new(update,context, "🕓 <u>New scheduled post</u>")
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = True
-        message_html(update, context,
-                     "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nSend the news in one message.")
-        return TEXT
+        return message_new(update, context, "‼️ <u>New breaking news</u>")
+
+
+def message_new(update: Update, context: CallbackContext, text) -> int:
+    message_html(update, context,
+                 text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message.")
+    return NEWS
 
 
 def text(update: Update, context: CallbackContext) -> int:
@@ -111,18 +113,15 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
     return PUBLISH
 
 
+## What about SUBMIT and CANCEL instead?
+
+
 def publish_breaking(update: Update, context: CallbackContext) -> int:
     broadcast_html(
         context,
         "#EILMELDUNG ‼️\n\n" + "hhh" + "\nFolge @militaernews")
 
-    context.user_data["step"] = 0
-
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text="Nachricht gesendet")
-
-    return ConversationHandler.END
+    return publish_success(update, context)
 
 
 def publish_post(update: Update, context: CallbackContext) -> int:
@@ -130,11 +129,10 @@ def publish_post(update: Update, context: CallbackContext) -> int:
         context,
         "hhh" + "\nFolge @militaernews")
 
-    context.user_data["step"] = 0
+    return publish_success(update, context)
 
-    #  find out what's the correct message to get rid of that button :)
-    #  update.message.edit_text("Nachricht gesendet")
 
+def publish_success(update: Update, context: CallbackContext) -> int:
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text="Nachricht gesendet")
@@ -192,7 +190,7 @@ def main() -> None:
         entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                       MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
         states={
-            TEXT: [MessageHandler(Filters.regex('.*'), text)],
+            NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
