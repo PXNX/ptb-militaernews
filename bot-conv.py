@@ -31,7 +31,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-TYPE, TEXT, PHOTO, PUBLISH = range(4)
+TEXT, PHOTO, PUBLISH = range(3)
 
 
 def verify(message: Message, context: CallbackContext):
@@ -42,10 +42,9 @@ def verify(message: Message, context: CallbackContext):
         context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
-def start(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
-
-    return TYPE
+def start(update: Update, context: CallbackContext):
+    if verify(update.message, context):
+        update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
@@ -139,9 +138,9 @@ def broadcast_html(context: CallbackContext, text):
 
 def cancel(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
-        'Editing this post was canceled. 🗑',
-        reply_markup=ReplyKeyboardMarkup(
-            [['Start new post🆕']], one_time_keyboard=True, resize_keyboard=True))
+        text= '<b>Editing this post was canceled.</b> 🗑\n\nFeel free to create a new one.',
+        parse_mode=ParseMode.HTML,
+        reply_markup=START_KEYBOARD, one_time_keyboard=True, resize_keyboard=True)
 
     return ConversationHandler.END
 
@@ -172,11 +171,9 @@ def main() -> None:
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),
-                      MessageHandler(Filters.regex('Start new post🆕'), start)],
-        states={
-            TYPE: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
+        entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                    MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
+        states={
             TEXT: [MessageHandler(Filters.regex('.*'), photo)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
