@@ -81,7 +81,7 @@ def photo(update: Update, context: CallbackContext) -> int:
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
 
     if context.user_data["breaking"]:
-        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
+        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n"+context.user_data["message"],
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]],
                                                                    one_time_keyboard=True,
