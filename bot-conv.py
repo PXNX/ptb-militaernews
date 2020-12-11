@@ -1,7 +1,7 @@
 import logging
 import os
 
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, ParseMode
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, ParseMode, Message
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -25,17 +25,35 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-GENDER, PHOTO, LOCATION, BIO = range(4)
+TEXT, PHOTO, LOCATION, BIO = range(4)
+
+
+def verify(message: Message, context: CallbackContext):
+    current_chat_id = message.chat_id
+    if current_chat_id in set(VERIFIED_USERS):
+        return True
+    else:
+        context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
 def start(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text(
-        'Hi! My name is Professor Bot. I will hold a conversation with you. '
-        'Send /cancel to stop talking to me.\n\n'
-        'Are you a boy or a girl?',
-        reply_markup=START_KEYBOARD)
+    update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
 
-    return GENDER
+    return TEXT
+
+
+def new_post(update: Update, context: CallbackContext):
+    if verify(update.message, context):
+        message_html(update,
+                     context,
+                     "<u>🕓 New scheduled post</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one message, please.")
+
+
+def new_breaking(update: Update, context: CallbackContext):
+    if verify(update.message, context):
+        message_html(update,
+                     context,
+                     "<u>‼️ New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one message, please.")
 
 
 def gender(update: Update, context: CallbackContext) -> int:
@@ -104,10 +122,15 @@ def bio(update: Update, context: CallbackContext) -> int:
 
 
 def cancel(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text('Editing this post was canceled. 🗑',
-                              reply_markup=START_KEYBOARD)  # reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text('Editing this post was canceled. 🗑', reply_markup=START_KEYBOARD)
 
     return ConversationHandler.END
+
+
+def message_html(update, context, text):
+    return context.bot.send_message(chat_id=update.message.chat_id,
+                                    text=text,
+                                    parse_mode=ParseMode.HTML)
 
 
 def error(update: Update, context: CallbackContext):
@@ -126,14 +149,13 @@ def main() -> None:
     # Post version 12 this will no longer be necessary
 
     updater = Updater(TOKEN)
-
     dp = updater.dispatcher
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler('start', start)], ## cancel == entrypoint, too?
         states={
-            GENDER: [MessageHandler(Filters.regex('^(Boy|Girl|Other)$'), gender)],
+            TEXT: [MessageHandler('Breaking‼️', new_breaking), MessageHandler('Scheduled🕓', new_post)],
             PHOTO: [MessageHandler(Filters.photo, photo), CommandHandler('skip', skip_photo)],
             LOCATION: [
                 MessageHandler(Filters.location, location),
