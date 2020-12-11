@@ -42,10 +42,9 @@ def verify(message: Message, context: CallbackContext):
         context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
-def start(update: Update, context: CallbackContext) -> int:
+def start(update: Update, context: CallbackContext):
     if verify(update.message, context):
         update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
-        return NEWS
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
