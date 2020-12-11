@@ -42,9 +42,10 @@ def verify(message: Message, context: CallbackContext):
         context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
 
 
-def start(update: Update, context: CallbackContext):
+def start(update: Update, context: CallbackContext)-> int:
     if verify(update.message, context):
         update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
+        return TEXT
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
@@ -138,7 +139,7 @@ def broadcast_html(context: CallbackContext, text):
 
 def cancel(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
-        text= '<b>Editing this post was canceled.</b> 🗑\n\nFeel free to create a new one.',
+        text='<b>Editing this post was canceled.</b> 🗑\n\nFeel free to create a new one.',
         parse_mode=ParseMode.HTML,
         reply_markup=START_KEYBOARD, one_time_keyboard=True, resize_keyboard=True)
 
@@ -172,13 +173,13 @@ def main() -> None:
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
-                   MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
+                      MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
         states={
             TEXT: [MessageHandler(Filters.regex('.*'), photo)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
-                      MessageHandler(Filters.regex('Schedule post📝'), publish_post) ]},
+                      MessageHandler(Filters.regex('Schedule post📝'), publish_post)]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
 
