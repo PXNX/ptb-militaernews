@@ -95,11 +95,18 @@ def photo(update: Update, context: CallbackContext) -> int:
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info("User %s did not send a photo.", user.first_name)
-    update.message.reply_text(
-        'I bet you look great! Now, send me your location please, ' 'or send /skip.'
-    )
+    if context.user_data["breaking"]:
+        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
+                                  parse_mode=ParseMode.HTML,
+                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]],
+                                                                   one_time_keyboard=True,
+                                                                   resize_keyboard=True))
+    else:
+        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
+                                  parse_mode=ParseMode.HTML,
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post📝️"]],
+                                                                   one_time_keyboard=True,
+                                                                   resize_keyboard=True))
 
     return PUBLISH
 
