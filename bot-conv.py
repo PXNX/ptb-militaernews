@@ -153,9 +153,10 @@ def main() -> None:
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)], ## cancel == entrypoint, too?
+        entry_points=[CommandHandler('start', start)],  ## cancel == entrypoint, too?
         states={
-            TEXT: [MessageHandler(Filters.text('Breaking‼️'), new_breaking), MessageHandler(Filters.text('Scheduled🕓'), new_post)],
+            TEXT: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
+                   MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
             PHOTO: [MessageHandler(Filters.photo, photo), CommandHandler('skip', skip_photo)],
             LOCATION: [
                 MessageHandler(Filters.location, location),
