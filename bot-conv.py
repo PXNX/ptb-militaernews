@@ -200,11 +200,11 @@ def main() -> None:
         states={
             TYPE: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                    MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
-            TEXT: [MessageHandler(Filters.regex('.*'), new_breaking)],
+            TEXT: [MessageHandler(Filters.regex('.*'), photo)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
-                      MessageHandler(Filters.regex('Schedule post📝'), publish_post), ]},
+                      MessageHandler(Filters.regex('Schedule post📝'), publish_post) ]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
 
