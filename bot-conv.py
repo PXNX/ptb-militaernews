@@ -42,18 +42,22 @@ def start(update: Update, context: CallbackContext) -> int:
     return TEXT
 
 
-def new_post(update: Update, context: CallbackContext):
+def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         message_html(update,
                      context,
                      "<u>🕓 New scheduled post</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one message, please.")
 
+        return PHOTO
 
-def new_breaking(update: Update, context: CallbackContext):
+
+def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         message_html(update,
                      context,
                      "<u>‼️ New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one message, please.")
+
+        return PHOTO
 
 
 def gender(update: Update, context: CallbackContext) -> int:
