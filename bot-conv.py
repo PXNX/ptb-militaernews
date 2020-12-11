@@ -67,6 +67,7 @@ def message_new(update: Update, context: CallbackContext, text) -> int:
 
 def text(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
+        context.user_data["message"] = update.message.text
         update.message.reply_text("<b>Step 2 of 3</b>\nSend all media to be added as an album.",
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([["Use placeholder🖼️"]]))
@@ -118,7 +119,7 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
 def publish_breaking(update: Update, context: CallbackContext) -> int:
     broadcast_html(
         context,
-        "#EILMELDUNG ‼️\n\n" + "hhh" + "\nFolge @militaernews")
+        "#EILMELDUNG ‼️\n\n" + context.user_data["message"] + "\nFolge @militaernews")
 
     return publish_success(update, context)
 
