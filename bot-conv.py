@@ -83,37 +83,47 @@ def photo(update: Update, context: CallbackContext) -> int:
     context.user_data["files"] = []
     context.user_data["files"] = context.user_data["files"].append(photo_file.file_id)
 
-    if context.user_data["breaking"]:
-        context.bot.send_media_group(update.message.chat_id, context.user_data["files"])
-
-        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n" + context.user_data["message"],
-                                  parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking 📢"]],
-                                                                   one_time_keyboard=True,
-                                                                   resize_keyboard=True))
-    else:
-        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
-                                  parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️"]],
-                                                                   one_time_keyboard=True,
-                                                                   resize_keyboard=True))
+    return message_preview(update, context)
 
     return PUBLISH
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
+    return message_preview(update, context)
+
+
+def message_preview(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text("<b>Step 3 of 3</b>\nPreview:",
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=ReplyKeyboardMarkup([["Submit post 📢"]],
+                                                               one_time_keyboard=True,
+                                                               resize_keyboard=True))
+
     if context.user_data["breaking"]:
-        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
-                                  parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking 📢"]],
-                                                                   one_time_keyboard=True,
-                                                                   resize_keyboard=True))
+
+        context.bot.send_message(
+            chat_id=update.message.chat_id,
+            text="#EILMELDUNG ‼️\n\n" + context.user_data["message"] + "\nFolge @militaernews",
+            parse_mode=ParseMode.HTML,
+            reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                text="🔰 Weitere Meldungen 🔰",
+                url="https://t.me/militaernews")))
+
+    # context.bot.send_media_group(update.message.chat_id, context.user_data["files"])
+
+    #  update.message.reply_text("<b>Step 3 of 3</b>\nPreview:",
+    #                            parse_mode=ParseMode.HTML,
+    #                            reply_markup=ReplyKeyboardMarkup([["Submit breaking 📢"]],
+    #                                                             one_time_keyboard=True,
+    #                                                             resize_keyboard=True))
     else:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
+
+      #  + context.user_data["message"]
 
     return PUBLISH
 
