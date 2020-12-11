@@ -23,7 +23,7 @@ CHANNEL = -1001302593973
 VERIFIED_USERS = [703453307, 525147382]
 
 START_KEYBOARD = ReplyKeyboardMarkup(
-    [['Breaking‼️', 'Scheduled🕓']],
+    [['Breaking news ‼️', 'Scheduled post 🕓']],
     one_time_keyboard=True,
     resize_keyboard=True)  # resize for small keyboards
 
@@ -39,7 +39,7 @@ def verify(message: Message, context: CallbackContext):
     if current_chat_id in set(VERIFIED_USERS):
         return True
     else:
-        context.bot.send_message(chat_id=current_chat_id, text="⚠️You're not a verfied user.")
+        context.bot.send_message(chat_id=current_chat_id, text="You're not a verfied user ⚠")
 
 
 def start(update: Update, context: CallbackContext):
@@ -70,7 +70,7 @@ def text(update: Update, context: CallbackContext) -> int:
         context.user_data["message"] = update.message.text
         update.message.reply_text("<b>Step 2 of 3</b>\nSend all media to be added as an album.",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Use placeholder🖼️"]]))
+                                  reply_markup=ReplyKeyboardMarkup([["Use placeholder 🖼️"]]))
         return PHOTO
 
 
@@ -83,13 +83,13 @@ def photo(update: Update, context: CallbackContext) -> int:
     if context.user_data["breaking"]:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n"+context.user_data["message"],
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]],
+                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking 📢"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
     else:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post📝️"]],
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
 
@@ -100,13 +100,13 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
     if context.user_data["breaking"]:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking📢"]],
+                                  reply_markup=ReplyKeyboardMarkup([["Submit breaking 📢"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
     else:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post📝️"]],
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
 
@@ -133,10 +133,9 @@ def publish_post(update: Update, context: CallbackContext) -> int:
 
 
 def publish_success(update: Update, context: CallbackContext) -> int:
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text="Nachricht gesendet")
-
+    update.message.reply_text("<b>Message sent</b> ✅\n\nCompose a new one?",
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=START_KEYBOARD)
     return ConversationHandler.END
 
 
@@ -154,8 +153,7 @@ def cancel(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
         text='<b>Editing this post was canceled.</b> 🗑\n\nFeel free to create a new one.',
         parse_mode=ParseMode.HTML,
-        reply_markup=START_KEYBOARD, one_time_keyboard=True, resize_keyboard=True)
-
+        reply_markup=START_KEYBOARD)
     return ConversationHandler.END
 
 
@@ -187,14 +185,16 @@ def main() -> None:
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
-                      MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
+        entry_points=[MessageHandler(Filters.regex('Breaking news ‼️'), new_breaking),
+                      MessageHandler(Filters.regex('Scheduled post 🕓'), new_post)],
         states={
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
-                    MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
-            PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
-                      MessageHandler(Filters.regex('Schedule post📝'), publish_post)]},
+                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
+            PUBLISH: [MessageHandler(Filters.regex('Submit breaking 📢'), publish_breaking),
+                      MessageHandler(Filters.regex('Schedule post 📝'), publish_post),
+                      MessageHandler(Filters.regex('Cancel 🗑'), cancel),
+                     ]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
 
