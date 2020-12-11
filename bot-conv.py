@@ -126,7 +126,10 @@ def bio(update: Update, context: CallbackContext) -> int:
 
 
 def cancel(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text('Editing this post was canceled. 🗑', reply_markup=START_KEYBOARD)
+    update.message.reply_text(
+        'Editing this post was canceled. 🗑',
+        reply_markup=ReplyKeyboardMarkup(
+            [['Start new post🆕']], one_time_keyboard=True, resize_keyboard=True))
 
     return ConversationHandler.END
 
@@ -157,7 +160,8 @@ def main() -> None:
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],  ## cancel == entrypoint, too?
+        entry_points=[CommandHandler('start', start), MessageHandler(Filters.regex('Start new post🆕'), start)],
+        ## cancel == entrypoint, too?
         states={
             TEXT: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                    MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
