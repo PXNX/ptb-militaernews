@@ -167,7 +167,7 @@ def main() -> None:
         entry_points=[MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                       MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
         states={
-            TEXT: MessageHandler(Filters.regex('.*'), photo),
+            TEXT: [MessageHandler(Filters.regex('.*'), photo)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
