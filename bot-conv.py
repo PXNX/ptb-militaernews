@@ -16,6 +16,11 @@ TOKEN = '1317941240:AAHxIBg8Oq0g2dfVgTBK9PfNxa0JCNGXDXk'
 CHANNEL = -1001302593973
 VERIFIED_USERS = [703453307, 525147382]
 
+START_KEYBOARD = ReplyKeyboardMarkup(
+    [['Breaking‼️', 'Scheduled🕓']],
+    one_time_keyboard=True,
+    resize_keyboard=True)  # resize for small keyboards
+
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
@@ -24,14 +29,11 @@ GENDER, PHOTO, LOCATION, BIO = range(4)
 
 
 def start(update: Update, context: CallbackContext) -> int:
-    reply_keyboard = [['Breaking‼️', 'Scheduled🕓']]
-
     update.message.reply_text(
         'Hi! My name is Professor Bot. I will hold a conversation with you. '
         'Send /cancel to stop talking to me.\n\n'
         'Are you a boy or a girl?',
-        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True,resize_keyboard=True),
-    )
+        reply_markup=START_KEYBOARD)
 
     return GENDER
 
@@ -102,11 +104,8 @@ def bio(update: Update, context: CallbackContext) -> int:
 
 
 def cancel(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info("User %s canceled the conversation.", user.first_name)
-    update.message.reply_text(
-        'Bye! I hope we can talk again some day.', reply_markup=ReplyKeyboardRemove()
-    )
+    update.message.reply_text('Editing this post was canceled. 🗑',
+                              reply_markup=START_KEYBOARD)  # reply_markup=ReplyKeyboardRemove())
 
     return ConversationHandler.END
 
