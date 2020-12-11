@@ -31,7 +31,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-TYPE, TEXT, PHOTO, LOCATION, BIO = range(5)
+TYPE, TEXT, PHOTO, PUBLISH, BIO = range(5)
 
 
 def verify(message: Message, context: CallbackContext):
@@ -83,7 +83,7 @@ def photo(update: Update, context: CallbackContext) -> int:
         'Gorgeous! Now, send me your location please, ' 'or send /skip if you don\'t want to.'
     )
 
-    return LOCATION
+    return PUBLISH
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
@@ -93,7 +93,7 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
         'I bet you look great! Now, send me your location please, ' 'or send /skip.'
     )
 
-    return LOCATION
+    return PUBLISH
 
 
 def location(update: Update, context: CallbackContext) -> int:
@@ -140,7 +140,8 @@ def publish_post(update: Update, context: CallbackContext) -> int:
 
     context.user_data["step"] = 0
 
-    #  update.message.edit_text("Nachricht gesendet")  ###########TODO find out what's the correct message to get rid of that button :)
+    #  find out what's the correct message to get rid of that button :)
+    #  update.message.edit_text("Nachricht gesendet")
 
     context.bot.send_message(
         chat_id=update.message.chat_id,
@@ -199,10 +200,11 @@ def main() -> None:
         states={
             TYPE: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                    MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
-            TEXT: [MessageHandler(Filters.photo, photo),
-                   MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
-            PHOTO: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
-                    MessageHandler(Filters.regex('Schedule post📝'), publish_post), ]},
+            TEXT: [MessageHandler(Filters.regex('.*'), new_breaking)],
+            PHOTO: [MessageHandler(Filters.photo, photo),
+                    MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
+            PUBLISH: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
+                      MessageHandler(Filters.regex('Schedule post📝'), publish_post), ]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
 
