@@ -81,7 +81,7 @@ def photo(update: Update, context: CallbackContext) -> int:
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
 
     context.user_data["files"] = []
-    context.user_data["files"] = context.user_data["files"].append(update.message.photo.file_id)
+    context.user_data["files"] = context.user_data["files"].append(update.message.photo[2].get_file().file_id)
 
     if context.user_data["breaking"]:
         context.bot.send_media_group(update.message.chat_id,context.user_data["files"])
