@@ -60,8 +60,7 @@ def new_breaking(update: Update, context: CallbackContext) -> int:
 
 
 def message_new(update: Update, context: CallbackContext, text) -> int:
-    message_html(update, context,
-                 text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message")
+    message_html(update, context, text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message")
     return NEWS
 
 
