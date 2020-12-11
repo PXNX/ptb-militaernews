@@ -31,7 +31,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-TYPE, TEXT, PHOTO, PUBLISH = range(5)
+TYPE, TEXT, PHOTO, PUBLISH = range(4)
 
 
 def verify(message: Message, context: CallbackContext):
