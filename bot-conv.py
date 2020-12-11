@@ -50,6 +50,7 @@ def start(update: Update, context: CallbackContext)-> int:
 
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
+        context.user_data["breaking"] = False
         message_html(update, context, "🕓 <u>New scheduled post</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
                                       "message, please.")
         return TEXT
@@ -57,21 +58,10 @@ def new_post(update: Update, context: CallbackContext) -> int:
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
+        context.user_data["breaking"] = True
         message_html(update, context, "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
                                       "message, please.")
         return TEXT
-
-
-def gender(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info("Gender of %s: %s", user.first_name, update.message.text)
-    update.message.reply_text(
-        'I see! Please send me a photo of yourself, '
-        'so I know what you look like, or send /skip if you don\'t want to.',
-        reply_markup=ReplyKeyboardRemove(),
-    )
-
-    return PHOTO
 
 
 def photo(update: Update, context: CallbackContext) -> int:
