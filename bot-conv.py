@@ -31,7 +31,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-TYPE, TEXT, PHOTO, PUBLISH, BIO = range(5)
+TYPE, TEXT, PHOTO, PUBLISH = range(5)
 
 
 def verify(message: Message, context: CallbackContext):
@@ -94,29 +94,6 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
     )
 
     return PUBLISH
-
-
-def location(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    user_location = update.message.location
-    logger.info(
-        "Location of %s: %f / %f", user.first_name, user_location.latitude, user_location.longitude
-    )
-    update.message.reply_text(
-        'Maybe I can visit you sometime! ' 'At last, tell me something about yourself.'
-    )
-
-    return BIO
-
-
-def skip_location(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info("User %s did not send a location.", user.first_name)
-    update.message.reply_text(
-        'You seem a bit paranoid! ' 'At last, tell me something about yourself.'
-    )
-
-    return BIO
 
 
 def publish_breaking(update: Update, context: CallbackContext) -> int:
