@@ -1,7 +1,13 @@
 import logging
 import os
 
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, ParseMode, Message
+from telegram import (
+    ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    Update, ParseMode,
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton)
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -25,7 +31,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-TEXT, PHOTO, LOCATION, BIO = range(4)
+TYPE, TEXT, PHOTO, LOCATION, BIO = range(5)
 
 
 def verify(message: Message, context: CallbackContext):
@@ -39,25 +45,21 @@ def verify(message: Message, context: CallbackContext):
 def start(update: Update, context: CallbackContext) -> int:
     update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
 
-    return TEXT
+    return TYPE
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
-        message_html(update,
-                     context,
-                     "<u>🕓 New scheduled post</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one message, please.")
-
-        return PHOTO
+        message_html(update, context, "🕓 <u>New scheduled post</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
+                                      "message, please.")
+        return TEXT
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
-        message_html(update,
-                     context,
-                     "<u>‼️ New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one message, please.")
-
-        return PHOTO
+        message_html(update, context, "‼️ <u>New breaking news</u>\n\n<b>Step 1 of 3</b>\nNow send the news in one "
+                                      "message, please.")
+        return TEXT
 
 
 def gender(update: Update, context: CallbackContext) -> int:
@@ -117,12 +119,44 @@ def skip_location(update: Update, context: CallbackContext) -> int:
     return BIO
 
 
-def bio(update: Update, context: CallbackContext) -> int:
-    user = update.message.from_user
-    logger.info("Bio of %s: %s", user.first_name, update.message.text)
-    update.message.reply_text('Thank you! I hope we can talk again some day.')
+def publish_breaking(update: Update, context: CallbackContext) -> int:
+    broadcast_html(
+        context,
+        "#EILMELDUNG ‼️\n\n" + "hhh" + "\nFolge @militaernews")
+
+    context.user_data["step"] = 0
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="Nachricht gesendet")
 
     return ConversationHandler.END
+
+
+def publish_post(update: Update, context: CallbackContext) -> int:
+    broadcast_html(
+        context,
+        "hhh" + "\nFolge @militaernews")
+
+    context.user_data["step"] = 0
+
+    #  update.message.edit_text("Nachricht gesendet")  ###########TODO find out what's the correct message to get rid of that button :)
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text="Nachricht gesendet")
+
+    return ConversationHandler.END
+
+
+def broadcast_html(context: CallbackContext, text):
+    context.bot.send_message(
+        chat_id=CHANNEL,
+        text=text,
+        parse_mode=ParseMode.HTML,
+        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+            text="🔰 Weitere Meldungen 🔰",
+            url="https://t.me/militaernews")))
 
 
 def cancel(update: Update, context: CallbackContext) -> int:
@@ -160,18 +194,15 @@ def main() -> None:
 
     # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start), MessageHandler(Filters.regex('Start new post🆕'), start)],
-        ## cancel == entrypoint, too?
+        entry_points=[CommandHandler('start', start),
+                      MessageHandler(Filters.regex('Start new post🆕'), start)],
         states={
-            TEXT: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
+            TYPE: [MessageHandler(Filters.regex('Breaking‼️'), new_breaking),
                    MessageHandler(Filters.regex('Scheduled🕓'), new_post)],
-            PHOTO: [MessageHandler(Filters.photo, photo), CommandHandler('skip', skip_photo)],
-            LOCATION: [
-                MessageHandler(Filters.location, location),
-                CommandHandler('skip', skip_location),
-            ],
-            BIO: [MessageHandler(Filters.text & ~Filters.command, bio)],
-        },
+            TEXT: [MessageHandler(Filters.photo, photo),
+                   MessageHandler(Filters.regex('Use placeholder🖼️'), skip_photo)],
+            PHOTO: [MessageHandler(Filters.regex('Submit breaking📢'), publish_breaking),
+                    MessageHandler(Filters.regex('Schedule post📝'), publish_post), ]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
 
