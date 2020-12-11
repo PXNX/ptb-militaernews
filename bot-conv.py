@@ -119,11 +119,11 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     else:
         update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n",
                                   parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️"]],
+                                  reply_markup=ReplyKeyboardMarkup([["Schedule post 📝️", "Cancel 🗑"]],
                                                                    one_time_keyboard=True,
                                                                    resize_keyboard=True))
 
-      #  + context.user_data["message"]
+    #  + context.user_data["message"]
 
     return PUBLISH
 
