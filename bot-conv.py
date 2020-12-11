@@ -50,7 +50,7 @@ def start(update: Update, context: CallbackContext):
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = False
-        return message_new(update,context, "🕓 <u>New scheduled post</u>")
+        return message_new(update, context, "🕓 <u>New scheduled post</u>")
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
@@ -81,13 +81,12 @@ def photo(update: Update, context: CallbackContext) -> int:
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
 
     context.user_data["files"] = []
-    context.user_data["files"] = context.user_data["files"].append(update.message.photo[2].get_file().file_id)
+    context.user_data["files"] = context.user_data["files"].append(photo_file.file_id)
 
     if context.user_data["breaking"]:
-        context.bot.send_media_group(update.message.chat_id,context.user_data["files"])
+        context.bot.send_media_group(update.message.chat_id, context.user_data["files"])
 
-
-        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n"+context.user_data["message"],
+        update.message.reply_text("<b>Step 3 of 3</b>\nPreview:\n\n" + context.user_data["message"],
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([["Submit breaking 📢"]],
                                                                    one_time_keyboard=True,
@@ -117,7 +116,6 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
                                                                    resize_keyboard=True))
 
     return PUBLISH
-
 
 
 ## What about SUBMIT and CANCEL instead?
@@ -201,7 +199,7 @@ def main() -> None:
             PUBLISH: [MessageHandler(Filters.regex('Submit breaking 📢'), publish_breaking),
                       MessageHandler(Filters.regex('Schedule post 📝'), publish_post),
                       MessageHandler(Filters.regex('Cancel 🗑'), cancel),
-                     ]},
+                      ]},
         fallbacks=[CommandHandler('cancel', cancel)],
     )
 
