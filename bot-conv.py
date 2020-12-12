@@ -121,7 +121,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     #  firstFile = context.user_data["files"][0]
 
-    firstFileWithCaption: InputMediaPhoto = context.user_data["files"][0]
+    #  first_file_caption: InputMediaPhoto = context.user_data["files"][0]
 
     # if firstFile[1] == 0:
     #     firstFileWithCaption: InputMediaPhoto = firstFile
@@ -129,9 +129,9 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     #  elif firstFile[1] == 1:
     #      firstFileWithCaption: InputMediaVideo = firstFile
 
-    firstFileWithCaption.caption = context.user_data["message"]
+    context.user_data["files"][0].caption = context.user_data["message"]
 
-    context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"], )
+    context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"])
 
     return PUBLISH
 
