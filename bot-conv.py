@@ -147,11 +147,13 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
-    currFile.caption = "rgsgg"
+    currmsg.caption = "rgsgg"
 
-    currFile.parse_mode = ParseMode.HTML
+    currmsg.parse_mode = ParseMode.HTML
 
-    context.bot.send_media_group(update.message.chat_id, media=[currFile])
+    context.bot.sendMediaGroup()
+    context.bot.send_media_group(update.message.chat_id,
+                                 media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
 
     return PUBLISH
 
