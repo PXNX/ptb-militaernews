@@ -87,13 +87,13 @@ def photo(update: Update, context: CallbackContext) -> int:
         context.user_data["files"] = file_list
     else:
 
-        if update.message.photo:
+      #  if update.message.photo:
             photo_file = update.message.photo.get_file()
             context.user_data["files"] = [photo_file.file_id, 0]
 
-        elif update.message.video:
-                video_file = update.message.video.get_file()
-                context.user_data["files"] = [video_file.file_id, 1]
+     #   elif update.message.video:
+     #           video_file = update.message.video.get_file()
+     #           context.user_data["files"] = [video_file.file_id, 1]
 
        # print(photo_file.file_id)
 
