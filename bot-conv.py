@@ -123,6 +123,13 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
 
+    if context.user_data["files"] is []:
+        placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
+        placeholder.caption = "afewefefefaef"
+        context.bot.send_media_group(update.message.chat_id,
+                                     media=[placeholder])
+    else:
+
     #  firstFile = context.user_data["files"][0]
 
     #  first_file_caption: InputMediaPhoto = context.user_data["files"][0]
@@ -143,25 +150,19 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     # currmsg: Message = currFile
 
-    currmsg: Message = context.user_data["files"][0]
+        currmsg: Message = context.user_data["files"][0]
 
     ## currmsg.caption = "HAAAA"
 
-    currFile: InputMediaPhoto = currmsg.photo[2].get_file()
+        currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
-    currmsg.caption = "rgsgg"
+        currmsg.caption = "rgsgg"
 
-    currmsg.parse_mode = ParseMode.HTML
+        currmsg.parse_mode = ParseMode.HTML
 
-    context.bot.sendMediaGroup()
-    context.bot.send_media_group(update.message.chat_id,
-                                 media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
-
-    if context.user_data["files"] is []:
-        placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
-        placeholder.caption = "afewefefefaef"
+        context.bot.sendMediaGroup()
         context.bot.send_media_group(update.message.chat_id,
-                                 media=[placeholder])
+                                 media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
 
     return PUBLISH
 
