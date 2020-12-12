@@ -82,16 +82,20 @@ def photo(update: Update, context: CallbackContext) -> int:
     if update.message.media_group_id:
         file_list = []
 
+
+
         #  file_list.append(photo_file.file_id) # +=
 
         context.user_data["files"] = file_list
     else:
 
-        if update.message.photo:
-            context.user_data["files"] = update.message.photo[2].get_file()
+       # if update.message.photo:
+            context.user_data["files"] = update.message.copy(update.message.chat_id)
 
-        elif update.message.video:
-            context.user_data["files"] = [update.message.video.get_file()]
+
+
+       # elif update.message.video:
+        #    context.user_data["files"] = [update.message.video.get_file()]
 
     # print(photo_file.file_id)
 
@@ -132,6 +136,10 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     context.user_data["files"][0].caption = context.user_data["message"]
 
     #  context.user_data["files"][0].caption = context.user_data["message"]
+
+    currFile: InputMediaPhoto = context.user_data["files"]
+
+    currFile.caption = "HAW"
 
     context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"])
 
