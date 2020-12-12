@@ -91,11 +91,9 @@ def photo(update: Update, context: CallbackContext) -> int:
         photo_file = update.message.photo[-1].get_file()
         context.user_data["files"] = photo_file.file_id
 
-    print(photo_file.file_id)
+        print(photo_file.file_id)
 
-    print(update.message.copy(update.message.chat_id).message_id)
-
-    context.user_data["files"] = file_list
+        print(update.message.copy(update.message.chat_id).message_id)
 
     return message_preview(update, context)
 
