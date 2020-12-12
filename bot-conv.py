@@ -88,10 +88,10 @@ def photo(update: Update, context: CallbackContext) -> int:
     else:
 
         if update.message.photo:
-            context.user_data["files"] = update.message.photo[2].get_file().file_id
+            context.user_data["files"] = [update.message.photo[2].get_file().file_id]
 
         elif update.message.video:
-            context.user_data["files"] = update.message.video.get_file().file_id
+            context.user_data["files"] = [update.message.video.get_file().file_id]
 
     # print(photo_file.file_id)
 
