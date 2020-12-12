@@ -103,6 +103,8 @@ def photo(update: Update, context: CallbackContext) -> int:
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
+    context.user_data["files"] = []
+
     # maybe something like getting the photo from a local storage
     return message_preview(update, context)
 
@@ -143,7 +145,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     currmsg: Message = context.user_data["files"][0]
 
-   ## currmsg.caption = "HAAAA"
+    ## currmsg.caption = "HAAAA"
 
     currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
@@ -154,6 +156,12 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     context.bot.sendMediaGroup()
     context.bot.send_media_group(update.message.chat_id,
                                  media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
+
+    if context.user_data["files"] is []:
+        placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
+        placeholder.caption = "afewefefefaef"
+        context.bot.send_media_group(update.message.chat_id,
+                                 media=[placeholder])
 
     return PUBLISH
 
