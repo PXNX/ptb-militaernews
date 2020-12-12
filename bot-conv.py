@@ -125,12 +125,10 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     if not context.user_data["files"]:
         placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
-        placeholder.caption = context.user_data["message"]
+        placeholder.caption = context.user_data["message"] + "\nFolge @militaernews"
         context.bot.send_media_group(update.message.chat_id,
                                      media=[placeholder],
-                                     reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-                                         text="🔰 Weitere Meldungen 🔰",
-                                         url="https://t.me/militaernews")))
+                                     )
     else:
 
         #  firstFile = context.user_data["files"][0]
