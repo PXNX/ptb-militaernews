@@ -7,7 +7,7 @@ from telegram import (
     Update, ParseMode,
     Message,
     InlineKeyboardMarkup,
-    InlineKeyboardButton)
+    InlineKeyboardButton, InputMediaPhoto, InputMediaVideo)
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -86,12 +86,18 @@ def photo(update: Update, context: CallbackContext) -> int:
 
         context.user_data["files"] = file_list
     else:
-        photo_file = update.message.photo[-1].get_file()
-        context.user_data["files"] = photo_file.file_id
 
-        print(photo_file.file_id)
+        if update.message.photo:
+            photo_file = update.message.photo.get_file()
+            context.user_data["files"] = [photo_file.file_id, 0]
 
-        print(update.message.copy(update.message.chat_id).message_id)
+        elif update.message.video:
+                video_file = update.message.video.get_file()
+                context.user_data["files"] = [video_file.file_id, 1]
+
+       # print(photo_file.file_id)
+
+    #  print(update.message.copy(update.message.chat_id).message_id)
 
     return message_preview(update, context)
 
@@ -115,7 +121,20 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
 
-    context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"])
+  #  firstFile = context.user_data["files"][0]
+
+    firstFileWithCaption: InputMediaPhoto = context.user_data["files"][0]
+
+   # if firstFile[1] == 0:
+   #     firstFileWithCaption: InputMediaPhoto = firstFile
+
+  #  elif firstFile[1] == 1:
+  #      firstFileWithCaption: InputMediaVideo = firstFile
+
+    firstFileWithCaption.caption = context.user_data["message"]
+
+
+    context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"], )
 
     return PUBLISH
 
@@ -208,9 +227,7 @@ def main() -> None:
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
-            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)
-
-                      ]},
+            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     )
 
