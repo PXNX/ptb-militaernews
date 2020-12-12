@@ -123,7 +123,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
 
-    if context.user_data["files"] is []:
+    if not context.user_data["files"]:
         placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
         placeholder.caption = "afewefefefaef"
         context.bot.send_media_group(update.message.chat_id,
