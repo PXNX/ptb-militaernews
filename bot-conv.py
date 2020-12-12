@@ -141,7 +141,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     currFile.caption = "HAW"
 
-    context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"])
+    context.bot.send_media_group(update.message.chat_id, media=[currFile])
 
     return PUBLISH
 
