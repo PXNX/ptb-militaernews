@@ -93,8 +93,6 @@ def photo(update: Update, context: CallbackContext) -> int:
         elif update.message.video:
             context.user_data["files"] = [update.message.video.get_file()]
 
-
-
     # print(photo_file.file_id)
 
     #  print(update.message.copy(update.message.chat_id).message_id)
@@ -116,7 +114,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     context.bot.send_message(
         chat_id=update.message.chat_id,
         text=context.user_data["message"] + "\nFolge @militaernews",
-        parse_mode=ParseMode.HTML,
+       # parse_mode=ParseMode.HTML,
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
@@ -131,13 +129,9 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     #  elif firstFile[1] == 1:
     #      firstFileWithCaption: InputMediaVideo = firstFile
 
-    context.user_data["files"][0].caption =  context.user_data["message"]
+    context.user_data["files"][0].caption = context.user_data["message"]
 
-
-
-
-
-  #  context.user_data["files"][0].caption = context.user_data["message"]
+    #  context.user_data["files"][0].caption = context.user_data["message"]
 
     context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"])
 
