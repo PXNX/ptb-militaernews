@@ -79,9 +79,11 @@ def photo(update: Update, context: CallbackContext) -> int:
     photo_file.download('user_photo.jpg')
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
 
-    file_list = []
+    if update.message.media_group_id:
+        file_list = []
 
-    file_list.append(photo_file.file_id)
+
+        file_list.append(photo_file.file_id) # +=
 
     print(photo_file.file_id)
 
