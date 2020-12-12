@@ -149,6 +149,8 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     currFile.caption = "rgsgg"
 
+    currFile.parse_mode = ParseMode.HTML
+
     context.bot.send_media_group(update.message.chat_id, media=[currFile])
 
     return PUBLISH
