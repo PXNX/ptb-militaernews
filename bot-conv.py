@@ -7,7 +7,7 @@ from telegram import (
     Update, ParseMode,
     Message,
     InlineKeyboardMarkup,
-    InlineKeyboardButton, InputMediaPhoto, InputMediaVideo)
+    InlineKeyboardButton, InputMediaPhoto, InputMediaVideo, MessageId)
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -90,7 +90,7 @@ def photo(update: Update, context: CallbackContext) -> int:
     else:
 
         # if update.message.photo:
-        context.user_data["files"] = [update.message.copy(update.message.chat_id)]
+        context.user_data["files"] = [update.message]  #[update.message.copy(update.message.chat_id)]
 
     # elif update.message.video:
     #    context.user_data["files"] = [update.message.video.get_file()]
@@ -131,13 +131,23 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     #  elif firstFile[1] == 1:
     #      firstFileWithCaption: InputMediaVideo = firstFile
 
-    context.user_data["files"][0].caption = context.user_data["message"]
+  #  context.user_data["files"][0].caption = context.user_data["message"]
 
     #  context.user_data["files"][0].caption = context.user_data["message"]
 
-    currFile: InputMediaPhoto = context.user_data["files"][0]
+  #  currFile: MessageId = context.user_data["files"][0]
 
-    currFile.caption = "HAW"
+
+
+ #   currFile.caption = "HAW"
+
+   # currmsg: Message = currFile
+
+    currmsg: Message =  context.user_data["files"][0]
+
+    currmsg.caption = "HAAAA"
+
+    currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
     context.bot.send_media_group(update.message.chat_id, media=[currFile])
 
