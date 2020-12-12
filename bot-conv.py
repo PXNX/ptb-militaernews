@@ -50,17 +50,19 @@ def start(update: Update, context: CallbackContext):
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = False
-        return message_new(update, context, "<u>New scheduled post</u> 🕓")
+        return message_new(update, "<u>New scheduled post</u> 🕓")
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = True
-        return message_new(update, context, "<u>New breaking news</u> ‼️")
+        return message_new(update, "<u>New breaking news</u> ‼️")
 
 
-def message_new(update: Update, context: CallbackContext, text) -> int:
-    message_html(update, context, text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message")
+def message_new(update: Update, text) -> int:
+    update.message.reply_text(text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message",
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=ReplyKeyboardRemove)
     return NEWS
 
 
@@ -82,20 +84,16 @@ def photo(update: Update, context: CallbackContext) -> int:
     if update.message.media_group_id:
         file_list = []
 
-
-
         #  file_list.append(photo_file.file_id) # +=
 
         context.user_data["files"] = file_list
     else:
 
-       # if update.message.photo:
-            context.user_data["files"] = update.message.copy(update.message.chat_id)
+        # if update.message.photo:
+        context.user_data["files"] = update.message.copy(update.message.chat_id)
 
-
-
-       # elif update.message.video:
-        #    context.user_data["files"] = [update.message.video.get_file()]
+    # elif update.message.video:
+    #    context.user_data["files"] = [update.message.video.get_file()]
 
     # print(photo_file.file_id)
 
