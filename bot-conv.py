@@ -42,10 +42,9 @@ def verify(message: Message, context: CallbackContext):
         context.bot.send_message(chat_id=current_chat_id, text="You're not a verfied user ⚠")
 
 
-def start(update: Update, context: CallbackContext) :
+def start(update: Update, context: CallbackContext):
     if verify(update.message, context):
         update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
-
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
@@ -75,17 +74,15 @@ def text(update: Update, context: CallbackContext) -> int:
 
 
 def photo(update: Update, context: CallbackContext) -> int:
-   # user = update.message.from_user
-   # photo_file = update.message.photo[-1].get_file()
-  #  photo_file.download('user_photo.jpg')
-  #  logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
+    # user = update.message.from_user
+    # photo_file = update.message.photo[-1].get_file()
+    #  photo_file.download('user_photo.jpg')
+    #  logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
 
     if update.message.media_group_id:
         file_list = []
 
-
-      #  file_list.append(photo_file.file_id) # +=
-
+        #  file_list.append(photo_file.file_id) # +=
 
         context.user_data["files"] = file_list
     else:
@@ -211,10 +208,10 @@ def main() -> None:
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
-            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish),
-                      MessageHandler(Filters.regex('Cancel 🗑'), cancel),
+            PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)
+
                       ]},
-        fallbacks=[CommandHandler('cancel', cancel), CommandHandler('start', start)],
+        fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     )
 
     dp.add_handler(conv_handler)
