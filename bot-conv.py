@@ -50,7 +50,7 @@ def start(update: Update, context: CallbackContext):
 def new_post(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data["breaking"] = False
-        return message_new(update, context,"<u>New scheduled post</u> 🕓")
+        return message_new(update, context, "<u>New scheduled post</u> 🕓")
 
 
 def new_breaking(update: Update, context: CallbackContext) -> int:
@@ -59,7 +59,7 @@ def new_breaking(update: Update, context: CallbackContext) -> int:
         return message_new(update, context, "<u>New breaking news</u> ‼️")
 
 
-def message_new(update: Update, context:CallbackContext, text: str) -> int:
+def message_new(update: Update, context: CallbackContext, text: str) -> int:
     update.message.reply_text(text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message",
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardRemove())
@@ -90,7 +90,7 @@ def photo(update: Update, context: CallbackContext) -> int:
     else:
 
         # if update.message.photo:
-        context.user_data["files"] = [update.message]  #[update.message.copy(update.message.chat_id)]
+        context.user_data["files"] = [update.message]  # [update.message.copy(update.message.chat_id)]
 
     # elif update.message.video:
     #    context.user_data["files"] = [update.message.video.get_file()]
@@ -131,23 +131,23 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     #  elif firstFile[1] == 1:
     #      firstFileWithCaption: InputMediaVideo = firstFile
 
-  #  context.user_data["files"][0].caption = context.user_data["message"]
+    #  context.user_data["files"][0].caption = context.user_data["message"]
 
     #  context.user_data["files"][0].caption = context.user_data["message"]
 
-  #  currFile: MessageId = context.user_data["files"][0]
+    #  currFile: MessageId = context.user_data["files"][0]
 
+    #   currFile.caption = "HAW"
 
+    # currmsg: Message = currFile
 
- #   currFile.caption = "HAW"
+    currmsg: Message = context.user_data["files"][0]
 
-   # currmsg: Message = currFile
-
-    currmsg: Message =  context.user_data["files"][0]
-
-    currmsg.caption = "HAAAA"
+   ## currmsg.caption = "HAAAA"
 
     currFile: InputMediaPhoto = currmsg.photo[2].get_file()
+
+    currFile.caption = "rgsgg"
 
     context.bot.send_media_group(update.message.chat_id, media=[currFile])
 
