@@ -87,15 +87,13 @@ def photo(update: Update, context: CallbackContext) -> int:
         context.user_data["files"] = file_list
     else:
 
-      #  if update.message.photo:
-            photo_file = update.message.photo.get_file()
-            context.user_data["files"] = [photo_file.file_id, 0]
+        if update.message.photo:
+            context.user_data["files"] = [update.message.photo[2].get_file().file_id, 0]
 
-     #   elif update.message.video:
-     #           video_file = update.message.video.get_file()
-     #           context.user_data["files"] = [video_file.file_id, 1]
+        elif update.message.video:
+            context.user_data["files"] = [update.message.video.get_file().file_id, 1]
 
-       # print(photo_file.file_id)
+    # print(photo_file.file_id)
 
     #  print(update.message.copy(update.message.chat_id).message_id)
 
@@ -121,18 +119,17 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
 
-  #  firstFile = context.user_data["files"][0]
+    #  firstFile = context.user_data["files"][0]
 
     firstFileWithCaption: InputMediaPhoto = context.user_data["files"][0]
 
-   # if firstFile[1] == 0:
-   #     firstFileWithCaption: InputMediaPhoto = firstFile
+    # if firstFile[1] == 0:
+    #     firstFileWithCaption: InputMediaPhoto = firstFile
 
-  #  elif firstFile[1] == 1:
-  #      firstFileWithCaption: InputMediaVideo = firstFile
+    #  elif firstFile[1] == 1:
+    #      firstFileWithCaption: InputMediaVideo = firstFile
 
     firstFileWithCaption.caption = context.user_data["message"]
-
 
     context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"], )
 
