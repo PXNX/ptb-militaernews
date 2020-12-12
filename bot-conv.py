@@ -125,34 +125,37 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     if not context.user_data["files"]:
         placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
-        placeholder.caption = "afewefefefaef"
+        placeholder.caption = context.user_data["message"]
         context.bot.send_media_group(update.message.chat_id,
-                                     media=[placeholder])
+                                     media=[placeholder],
+                                     reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+                                         text="🔰 Weitere Meldungen 🔰",
+                                         url="https://t.me/militaernews")))
     else:
 
-    #  firstFile = context.user_data["files"][0]
+        #  firstFile = context.user_data["files"][0]
 
-    #  first_file_caption: InputMediaPhoto = context.user_data["files"][0]
+        #  first_file_caption: InputMediaPhoto = context.user_data["files"][0]
 
-    # if firstFile[1] == 0:
-    #     firstFileWithCaption: InputMediaPhoto = firstFile
+        # if firstFile[1] == 0:
+        #     firstFileWithCaption: InputMediaPhoto = firstFile
 
-    #  elif firstFile[1] == 1:
-    #      firstFileWithCaption: InputMediaVideo = firstFile
+        #  elif firstFile[1] == 1:
+        #      firstFileWithCaption: InputMediaVideo = firstFile
 
-    #  context.user_data["files"][0].caption = context.user_data["message"]
+        #  context.user_data["files"][0].caption = context.user_data["message"]
 
-    #  context.user_data["files"][0].caption = context.user_data["message"]
+        #  context.user_data["files"][0].caption = context.user_data["message"]
 
-    #  currFile: MessageId = context.user_data["files"][0]
+        #  currFile: MessageId = context.user_data["files"][0]
 
-    #   currFile.caption = "HAW"
+        #   currFile.caption = "HAW"
 
-    # currmsg: Message = currFile
+        # currmsg: Message = currFile
 
         currmsg: Message = context.user_data["files"][0]
 
-    ## currmsg.caption = "HAAAA"
+        ## currmsg.caption = "HAAAA"
 
         currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
@@ -162,7 +165,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.sendMediaGroup()
         context.bot.send_media_group(update.message.chat_id,
-                                 media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
+                                     media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
 
     return PUBLISH
 
