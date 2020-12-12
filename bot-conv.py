@@ -79,8 +79,15 @@ def photo(update: Update, context: CallbackContext) -> int:
     photo_file.download('user_photo.jpg')
     logger.info("Photo of %s: %s", user.first_name, 'user_photo.jpg')
 
-    context.user_data["files"] = []
-    context.user_data["files"] = context.user_data["files"].append(photo_file.file_id)
+    file_list = []
+
+    file_list.append(photo_file.file_id)
+
+    print(photo_file.file_id)
+
+    print(update.message.copy(update.message.chat_id).message_id)
+
+    context.user_data["files"] = file_list
 
     return message_preview(update, context)
 
@@ -103,6 +110,9 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
             text="🔰 Weitere Meldungen 🔰",
             url="https://t.me/militaernews")))
+
+    context.bot.send_media_group(update.message.chat_id, media=context.user_data["files"])
+
     return PUBLISH
 
 
