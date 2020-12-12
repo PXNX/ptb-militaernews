@@ -59,7 +59,7 @@ def new_breaking(update: Update, context: CallbackContext) -> int:
         return message_new(update, "<u>New breaking news</u> ‼️")
 
 
-def message_new(update: Update, text) -> int:
+def message_new(update: Update, text: str) -> int:
     update.message.reply_text(text + "\n\n<b>Step 1 of 3</b>\nSend the news in one message",
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardRemove)
@@ -90,7 +90,7 @@ def photo(update: Update, context: CallbackContext) -> int:
     else:
 
         # if update.message.photo:
-        context.user_data["files"] = update.message.copy(update.message.chat_id)
+        context.user_data["files"] = [update.message.copy(update.message.chat_id)]
 
     # elif update.message.video:
     #    context.user_data["files"] = [update.message.video.get_file()]
@@ -135,7 +135,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     #  context.user_data["files"][0].caption = context.user_data["message"]
 
-    currFile: InputMediaPhoto = context.user_data["files"]
+    currFile: InputMediaPhoto = context.user_data["files"][0]
 
     currFile.caption = "HAW"
 
