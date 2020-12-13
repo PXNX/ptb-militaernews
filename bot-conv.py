@@ -126,16 +126,24 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     if not context.user_data["files"]:
         placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
         #   placeholder.caption = context.user_data["message"] + "\n\n🔰 Folge @militaernews für mehr 🔰"
-        context.bot.send_media_group(update.message.chat_id,
-                                     media=[placeholder],
-                                     )
+
+       # context.bot.send_media_group(update.message.chat_id,
+       #                              media=[placeholder],
+        #                             )
         context.bot.send_photo(
             update.message.chat_id,
             photo=open('eilmeldung.png', 'rb'),
             caption=context.user_data["message"] + "\n\nFolge @militaernews",
             reply_markup=InlineKeyboardMarkup.from_button(
                 InlineKeyboardButton(text="🔰 Weitere Meldungen 🔰", url="https://t.me/militaernews")))
+
+    elif len(context.user_data["files"]) == 1:
+
+        context.bot.send_message(update.message.chat_id, text="ein Bild")
+
     else:
+
+        context.bot.send_message(update.message.chat_id, text="Media Group")
 
         #  firstFile = context.user_data["files"][0]
 
@@ -261,7 +269,7 @@ def main() -> None:
         states={
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             PHOTO: [MessageHandler(Filters.photo, photo),
-                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],
+                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)], #skip placeholder?
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     )

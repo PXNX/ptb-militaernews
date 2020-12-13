@@ -1,1 +1,1 @@
-web: python bot-conv.py
+web: python3 bot-conv.py
