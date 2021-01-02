@@ -18,7 +18,7 @@ from telegram.ext import (
 )
 
 PORT = int(os.environ.get('PORT', 5000))
-TOKEN = '1317941240:AAHxIBg8Oq0g2dfVgTBK9PfNxa0JCNGXDXk'
+TOKEN = os.environ.get('TOKEN')
 CHANNEL = -1001302593973
 VERIFIED_USERS = [703453307, 525147382]
 
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 NEWS, PHOTO, PUBLISH = range(3)
 
-
+###### Replace with Filter
 def verify(message: Message, context: CallbackContext):
     current_chat_id = message.chat_id
     if current_chat_id in set(VERIFIED_USERS):
