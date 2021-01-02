@@ -110,6 +110,7 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
+    msg : Message = update.message
     update.message.reply_text("<b>Step 3 of 3</b>\nPreview the generated post",
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([["Submit post 📣", "Cancel 🗑"]],
@@ -281,7 +282,7 @@ def main() -> None:
     updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
     updater.bot.setWebhook('https://ptb-militaernews.herokuapp.com/' + TOKEN)
 
-    updater.start_polling()
+    #updater.start_polling()
     updater.idle()
 
 
