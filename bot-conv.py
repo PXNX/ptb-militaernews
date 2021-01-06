@@ -35,17 +35,18 @@ NEWS, PHOTO, PUBLISH = range(3)
 
 
 ###### Replace with Filter
-def verify(message: Message, context: CallbackContext):
+def verify(message: Message, context: CallbackContext) -> bool:
     current_chat_id = message.chat_id
-    if current_chat_id in set(VERIFIED_USERS):
-        return True
-    else:
+    if current_chat_id not in set(VERIFIED_USERS):
         context.bot.send_message(chat_id=current_chat_id, text='You\'re not a verfied user ⚠')
+        return False
+    return True
 
 
 def start(update: Update, context: CallbackContext):
     if verify(update.message, context):
         update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
+        update.message.reply_html("<<><b>bold</b>")
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
