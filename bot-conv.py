@@ -22,6 +22,9 @@ TOKEN = os.environ.get('TOKEN')
 CHANNEL = -1001302593973
 VERIFIED_USERS = [703453307, 525147382]
 
+SHOW_MORE = InlineKeyboardMarkup(
+    [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')]])
+
 START_KEYBOARD = ReplyKeyboardMarkup(
     [['Breaking news ‼️', 'Scheduled post 🕓']],
     one_time_keyboard=True,
@@ -225,15 +228,9 @@ def broadcast_html(context: CallbackContext, text):
 
 def add_button(update: Update, context: CallbackContext):
     try:
-        update.effective_message.edit_reply_markup(
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',url='https://t.me/militaernews')]]))
+        update.effective_message.edit_reply_markup(reply_markup=SHOW_MORE)
     except:
         return
-
-
-  #  update.channel_post.edit_reply_markup(InlineKeyboardMarkup.from_button(
-    #    InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',url='https://t.me/militaernews')))
 
 
 def publish_success(update: Update, context: CallbackContext) -> int:
