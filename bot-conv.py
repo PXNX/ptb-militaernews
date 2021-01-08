@@ -224,9 +224,16 @@ def broadcast_html(context: CallbackContext, text):
 
 
 def add_button(update: Update, context: CallbackContext):
-    update.channel_post.edit_reply_markup(InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-            text='🔰 Weitere Meldungen 🔰',
-            url='https://t.me/militaernews')))
+    try:
+        update.effective_message.edit_reply_markup(
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',url='https://t.me/militaernews')]]))
+    except:
+        return
+
+
+  #  update.channel_post.edit_reply_markup(InlineKeyboardMarkup.from_button(
+    #    InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',url='https://t.me/militaernews')))
 
 
 def publish_success(update: Update, context: CallbackContext) -> int:
