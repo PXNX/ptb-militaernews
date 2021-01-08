@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 NEWS, PHOTO, PUBLISH = range(3)
 
 
-###### Replace with Filter
+# Replace with Filter
 def verify(message: Message, context: CallbackContext) -> bool:
     current_chat_id = message.chat_id
     if current_chat_id not in set(VERIFIED_USERS):
@@ -45,8 +45,7 @@ def verify(message: Message, context: CallbackContext) -> bool:
 
 def start(update: Update, context: CallbackContext):
     if verify(update.message, context):
-        # update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
-        update.message.reply_html("<<b>oobold</b>".replace('<' or '>', ''))
+        update.message.reply_text('Choose the post type.', reply_markup=START_KEYBOARD)
 
 
 def new_post(update: Update, context: CallbackContext) -> int:
@@ -224,6 +223,13 @@ def broadcast_html(context: CallbackContext, text):
             url='https://t.me/militaernews')))
 
 
+def add_button(update: Update, context: CallbackContext):
+    update.channel_post.edit_reply_markup(
+        InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+            text='🔰 Weitere Meldungen 🔰',
+            url='https://t.me/militaernews')))
+
+
 def publish_success(update: Update, context: CallbackContext) -> int:
     update.message.reply_text('<b>Message sent</b> ✅\nCompose a new one?',
                               parse_mode=ParseMode.HTML,
@@ -276,6 +282,8 @@ def main() -> None:
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     )
+
+    dp.add_handler(MessageHandler(Filters.update.channel_post, add_button))
 
     dp.add_handler(conv_handler)
 
