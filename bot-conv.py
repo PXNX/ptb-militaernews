@@ -265,16 +265,14 @@ def error(update: Update, context: CallbackContext):
 
 
 def main() -> None:
-    # Create the Updater and pass it your bot's token.
-    # Make sure to set use_context=True to use the new context based callbacks
-    # Post version 12 this will no longer be necessary
-
     updater = Updater(TOKEN)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
-    dp.add_handler(MessageHandler(Filters.update.channel_post or Filters.update.edited_channel_post, add_button))
+    dp.add_handler(MessageHandler(Filters.update.channel_post
+                                  or Filters.update.edited_channel_post
+                                  or Filters.update.edited_message, add_button))
 
     dp.add_handler(ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking news ‼️'), new_breaking),
