@@ -264,15 +264,15 @@ def error(update: Update, context: CallbackContext):
         parse_mode=ParseMode.HTML)
 
 
-def main() -> None:
+if __name__ == '__main__':
     updater = Updater(TOKEN)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
-    dp.add_handler(MessageHandler(Filters.update.channel_post
-                                  or Filters.update.edited_channel_post
-                                  or Filters.update.edited_message, add_button))
+    dp.add_handler(MessageHandler(Filters.update.channel_post, add_button))
+    dp.add_handler(MessageHandler(Filters.update.edited_channel_post, add_button))
+
 
     dp.add_handler(ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking news ‼️'), new_breaking),
@@ -292,7 +292,3 @@ def main() -> None:
 
     updater.start_polling()  ##
     updater.idle()
-
-
-if __name__ == '__main__':
-    main()
