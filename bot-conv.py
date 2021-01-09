@@ -286,7 +286,7 @@ def main() -> None:
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     )
 
-    dp.add_handler(MessageHandler(Filters.update.channel_post, add_button))
+    dp.add_handler(MessageHandler(Filters.update.channel_post or Filters.update.edited_channel_post, add_button))
 
     dp.add_handler(conv_handler)
 
