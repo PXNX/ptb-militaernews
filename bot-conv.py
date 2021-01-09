@@ -274,8 +274,9 @@ def main() -> None:
 
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
-    # Add conversation handler with the states GENDER, PHOTO, LOCATION and BIO
-    conv_handler = ConversationHandler(
+    dp.add_handler(MessageHandler(Filters.update.channel_post or Filters.update.edited_channel_post, add_button))
+
+    dp.add_handler(ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking news ‼️'), new_breaking),
                       MessageHandler(Filters.regex('Scheduled post 🕓'), new_post)],
         states={
@@ -284,11 +285,7 @@ def main() -> None:
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],  # skip placeholder?
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
-    )
-
-    dp.add_handler(MessageHandler(Filters.update.channel_post or Filters.update.edited_channel_post, add_button))
-
-    dp.add_handler(conv_handler)
+    ))
 
     #  dp.add_error_handler(error)
 
