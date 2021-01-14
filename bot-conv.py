@@ -80,15 +80,15 @@ def text(update: Update, context: CallbackContext) -> int:
 def add_photo(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
         context.user_data['photo'] = True
-        context.user_data['files'] = [update.message.photo[2].file_id]
+    #    context.user_data['files'] = [update.message.photo[2].file_id]
 
       #  context.bot.send_photo(chat_id=update.message.chat_id,
        #                        photo=update.message.photo[2].file_id)
 
       #  context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[2].file_id, 'r'))
 
-    else:
-        context.user_data['files'] += update.message.photo[2].file_id
+  #  else:
+    context.user_data['files'] += update.message.photo[2].file_id
     return media_sent(update, context)
 
 
