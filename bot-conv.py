@@ -69,29 +69,30 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 
 def text(update: Update, context: CallbackContext) -> int:
     context.user_data['message'] = update.message.text_markdown
+    context.user_data['remaining'] = 4
+    context.user_data['photo'] = []
+    context.user_data['files'] = None
     update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
-    context.user_data['remaining'] = 4
-    context.user_data['files'] = None
     return MEDIA
 
 
 def add_photo(update: Update, context: CallbackContext) -> int:
     if context.user_data['files'] is None:
-        context.user_data['photo'] = True
         context.user_data['files'] = [update.message.photo[2].file_id]
     else:
         context.user_data['files'] += update.message.photo[2].file_id
+    context.user_data['photo'][4 - context.user_data['remaining']] = True
     return media_sent(update, context)
 
 
 def add_video(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
-        context.user_data['photo'] = False
         context.user_data['files'] = [update.message.video.file_id]
     else:
         context.user_data['files'] += update.message.video.get_file().file_id
+    context.user_data['photo'][4 - context.user_data['remaining']] = False
     return media_sent(update, context)
 
 
@@ -130,7 +131,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             reply_markup=SHOW_MORE)
 
     elif len(context.user_data['files']) == 1:
-        if context.user_data['photo']:
+        if context.user_data['photo'][0]:
             context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
                                    caption=txt,
                                    parse_mode=ParseMode.MARKDOWN_V2,
@@ -145,10 +146,23 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.send_message(update.message.chat_id, text='Media Group:')
 
-        context.bot.send_media_group(update.message.chat_id, media=
-        [InputMediaPhoto(context.user_data['files'][0],txt),
-         InputMediaPhoto(context.user_data['files'][0],txt)]
-                                     )
+        if context.user_data['photo'][0]:
+            files = [
+                InputMediaPhoto(media=context.user_data['files'][0], caption=txt, parse_mode=ParseMode.MARKDOWN_V2)]
+        else:
+            files = [
+                InputMediaVideo(media=context.user_data['files'][0], caption=txt, parse_mode=ParseMode.MARKDOWN_V2)]
+
+        for i in range(len(context.user_data['files'] + 1)):
+
+            if context.user_data['photo'][i]:
+                files += InputMediaPhoto(media=context.user_data['files'][i], caption=txt,
+                                         parse_mode=ParseMode.MARKDOWN_V2)
+            else:
+                files += InputMediaVideo(media=context.user_data['files'][i], caption=txt,
+                                         parse_mode=ParseMode.MARKDOWN_V2)
+
+        context.bot.send_media_group(chat_id=update.message.chat_id,media=files,reply_markup=SHOW_MORE)
 
     return PUBLISH
 
