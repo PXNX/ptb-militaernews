@@ -87,7 +87,7 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     if(context.user_data['skippable'] is not None):
         update.message.reply_text(text="You have 9 photos/videos remaining.", 
                                               reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
-        
+        #maybe count down.. maximum number of files to 3 or so?
         
        #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
        #                                       message_id=context.user_data['skippable'],
