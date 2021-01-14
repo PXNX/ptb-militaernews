@@ -83,7 +83,7 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     # photo_file = update.message.photo[-1].get_file()
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
-
+    context.user_data['files'] += update.message.photo[2].file_id
   #  if update.message.media_group_id:
     #    file_list = []
 
