@@ -80,11 +80,12 @@ def text(update: Update, context: CallbackContext) -> int:
 def add_photo(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
         context.user_data['photo'] = True
-       # context.user_data['files'] = [update.message.photo[2].file_id]
+        # context.user_data['files'] = [update.message.photo[2].file_id]
 
-        context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[-1].get_file().file_id, 'rb'))
+        context.bot.send_photo(chat_id=update.message.chat_id,
+                               photo=open(update.message.photo[-1].get_file().file_id, 'r'))
 
-        context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[2].file_id, 'rb'))
+        context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[2].file_id, 'r'))
 
     else:
         context.user_data['files'] += update.message.photo[2].get_file().file_id
@@ -117,7 +118,7 @@ def media_sent(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
- #   msg: Message = update.message
+    #   msg: Message = update.message
     update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post',
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
@@ -149,7 +150,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.send_message(update.message.chat_id, text='ein Bild')
         if context.user_data['photo']:
-            logger.info("----------"+str(context.user_data['files'][0]))
+            logger.info("----------" + str(context.user_data['files'][0]))
             context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'][0], 'rb'))
 
     else:
@@ -178,11 +179,11 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     #    currmsg: Message = context.user_data['files'][0]
 
-        ## currmsg.caption = 'HAAAA'
+    # currmsg.caption = 'HAAAA'
 
     #    currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
-   #     currmsg.caption = 'rgsgg'
+    #     currmsg.caption = 'rgsgg'
 
     #    currmsg.parse_mode = ParseMode.HTML
 
@@ -193,7 +194,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     return PUBLISH
 
 
-## What about SUBMIT and CANCEL instead?
+# What about SUBMIT and CANCEL instead?
 def publish(update: Update, context: CallbackContext) -> int:
     if context.user_data['breaking']:
         broadcast_html(
@@ -272,7 +273,7 @@ if __name__ == '__main__':
     updater = Updater(TOKEN)
     dp = updater.dispatcher
 
-  #  dp.add_error_handler(error)
+    #  dp.add_error_handler(error)
 
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
