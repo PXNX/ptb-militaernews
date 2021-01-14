@@ -82,6 +82,8 @@ def add_photo(update: Update, context: CallbackContext) -> int:
         context.user_data['photo'] = True
         context.user_data['files'] = [update.message.photo[2].file_id]
 
+        context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[2].get_file().file_id, 'rb'))
+
         context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[2].file_id, 'rb'))
 
     else:
