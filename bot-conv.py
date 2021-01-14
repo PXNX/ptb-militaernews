@@ -80,10 +80,10 @@ def text(update: Update, context: CallbackContext) -> int:
 
 def add_photo(update: Update, context: CallbackContext) -> int:
     if context.user_data['files'] is []:
-        context.user_data['files'] = [update.message.photo[2].file_id]
+        context.user_data['files'] = [str(update.message.photo[2].file_id)]
         context.user_data['photo'] = [True]
     else:
-        context.user_data['files'].append(update.message.photo[2].file_id)
+        context.user_data['files'].append(str(update.message.photo[2].file_id))
         context.user_data['photo'][5 - context.user_data['remaining']] = True
     return media_sent(update, context)
 
