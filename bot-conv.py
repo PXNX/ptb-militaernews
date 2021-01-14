@@ -81,7 +81,8 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
         context.user_data['photo'] = True
         context.user_data['files'] = [update.message.photo[2].get_file().file_id]
-    context.user_data['files'] += update.message.photo[2].get_file().file_id
+    else:
+        context.user_data['files'] += update.message.photo[2].get_file().file_id
     return media_sent(update, context)
 
 
@@ -89,7 +90,8 @@ def add_video(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
         context.user_data['photo'] = False
         context.user_data['files'] = [update.message.video.get_file().file_id]
-    context.user_data['files'] += update.message.video.get_file().file_id
+    else:
+        context.user_data['files'] += update.message.video.get_file().file_id
     return media_sent(update, context)
 
 
@@ -110,7 +112,7 @@ def media_sent(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
-    msg: Message = update.message
+ #   msg: Message = update.message
     update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post',
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
@@ -169,19 +171,19 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         # currmsg: Message = currFile
 
-        currmsg: Message = context.user_data['files'][0]
+    #    currmsg: Message = context.user_data['files'][0]
 
         ## currmsg.caption = 'HAAAA'
 
-        currFile: InputMediaPhoto = currmsg.photo[2].get_file()
+    #    currFile: InputMediaPhoto = currmsg.photo[2].get_file()
 
-        currmsg.caption = 'rgsgg'
+   #     currmsg.caption = 'rgsgg'
 
-        currmsg.parse_mode = ParseMode.HTML
+    #    currmsg.parse_mode = ParseMode.HTML
 
-        context.bot.sendMediaGroup()
-        context.bot.send_media_group(update.message.chat_id,
-                                     media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
+    #    context.bot.sendMediaGroup()
+    #    context.bot.send_media_group(update.message.chat_id,
+    #                                 media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
 
     return PUBLISH
 
