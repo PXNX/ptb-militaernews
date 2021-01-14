@@ -80,7 +80,7 @@ def text(update: Update, context: CallbackContext) -> int:
 
 def add_photo(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
-        context.user_data['files'] = [update.message.photo[2].file_id]
+        context.user_data['files'] = update.message.photo[2].file_id
         context.user_data['photo'] = [True]
     else:
         context.user_data['files'] += [update.message.photo[2].file_id]
