@@ -118,13 +118,13 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
                                                                one_time_keyboard=True,
                                                                resize_keyboard=True))
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text=context.user_data['message'] + '\nFolge @militaernews',
+   # context.bot.send_message(
+   #     chat_id=update.message.chat_id,
+    #    text=context.user_data['message'] + '\nFolge @militaernews',
         # parse_mode=ParseMode.HTML,
-        reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-            text='🔰 Weitere Meldungen 🔰',
-            url='https://t.me/militaernews')))
+     #   reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
+     #       text='🔰 Weitere Meldungen 🔰',
+      #      url='https://t.me/militaernews')))
 
     if not context.user_data['files']:
         # placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
@@ -144,6 +144,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         if context.user_data['photo']:
             context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
                                    caption=context.user_data['message'] + '\n\nFolge @militaernews',
+                                   parse_mode= ParseMode.MARKDOWN_V2,
                                    reply_markup=InlineKeyboardMarkup.from_button(
                                        InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',
                                                             url='https://t.me/militaernews')))
