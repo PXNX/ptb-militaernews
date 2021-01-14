@@ -81,12 +81,6 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     if context.user_data['files'] is None:
         context.user_data['photo'] = True
         context.user_data['files'] = [update.message.photo[2].file_id]
-
-    #  context.bot.send_photo(chat_id=update.message.chat_id,
-    #                        photo=update.message.photo[2].file_id)
-
-    #  context.bot.send_photo(chat_id=update.message.chat_id, photo=open(update.message.photo[2].file_id, 'r'))
-
     else:
         context.user_data['files'] += update.message.photo[2].file_id
     return media_sent(update, context)
@@ -147,11 +141,14 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                 InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')))
 
     elif len(context.user_data['files']) == 1:
-
-        context.bot.send_message(update.message.chat_id, text='ein Bild')
         if context.user_data['photo']:
-            logger.info("----------" + str(context.user_data['files'][0]))
-            context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0])
+            context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
+                                   caption=context.user_data['message'] + '\n\nFolge @militaernews',
+                                   reply_markup=InlineKeyboardMarkup.from_button(
+                                       InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',
+                                                            url='https://t.me/militaernews')))
+        else:
+            context.bot.send_video(chat_id=update.message.chat_id, photo=context.user_data['files'][0])
 
     else:
 
