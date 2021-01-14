@@ -80,14 +80,14 @@ def text(update: Update, context: CallbackContext) -> int:
 def add_photo(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
         context.user_data['photo'] = True
-    context.user_data['files'] += update.message.photo[2].file_id
+    context.user_data['files'] += update.message.photo[2].get_file().file_id
     return media_sent(update, context)
 
 
 def add_video(update: Update, context: CallbackContext) -> int:
     if not context.user_data['files']:
         context.user_data['photo'] = False
-    context.user_data['files'] += update.message.video.file_id
+    context.user_data['files'] += update.message.video.get_file().file_id
     return media_sent(update, context)
 
 
@@ -140,7 +140,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.send_message(update.message.chat_id, text='ein Bild')
         if context.user_data['photo']:
-            context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'])
+            context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'], 'rb'))
 
     else:
 
