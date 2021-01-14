@@ -115,7 +115,8 @@ def media_sent(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post', parse_mode=ParseMode.HTML,
+    update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post',
+                              parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
                                                                one_time_keyboard=True, resize_keyboard=True))
 
@@ -125,24 +126,25 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         txt = context.user_data['message'] + '\nFolge @militaernews'
 
     if not context.user_data['files']:
-        msg = context.bot.send_photo(
-            update.message.chat_id,
-            photo=open('eilmeldung.png', 'rb'),
-            caption=txt,
-            parse_mode=ParseMode.MARKDOWN_V2,
-            reply_markup=SHOW_MORE)
+        msg = context.bot.send_photo(update.message.chat_id,
+                                     photo=open('eilmeldung.png', 'rb'),
+                                     caption=txt,
+                                     parse_mode=ParseMode.MARKDOWN_V2,
+                                     reply_markup=SHOW_MORE)
 
     elif len(context.user_data['files']) == 1:
         if context.user_data['photo'][0]:
-            msg = context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
-                                   caption=txt,
-                                   parse_mode=ParseMode.MARKDOWN_V2,
-                                   reply_markup=SHOW_MORE)
+            msg = context.bot.send_photo(chat_id=update.message.chat_id,
+                                         photo=context.user_data['files'][0],
+                                         caption=txt,
+                                         parse_mode=ParseMode.MARKDOWN_V2,
+                                         reply_markup=SHOW_MORE)
         else:
-            msg = context.bot.send_video(chat_id=update.message.chat_id, video=context.user_data['files'][0],
-                                   caption=txt,
-                                   parse_mode=ParseMode.MARKDOWN_V2,
-                                   reply_markup=SHOW_MORE)
+            msg = context.bot.send_video(chat_id=update.message.chat_id,
+                                         video=context.user_data['files'][0],
+                                         caption=txt,
+                                         parse_mode=ParseMode.MARKDOWN_V2,
+                                         reply_markup=SHOW_MORE)
 
     else:
 
@@ -155,7 +157,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             files = [
                 InputMediaVideo(media=context.user_data['files'][0], caption=txt, parse_mode=ParseMode.MARKDOWN_V2)]
 
-        for i in range(1, 1 + len(context.user_data['files'])):
+        for i in range(1, len(context.user_data['files'])):
 
             if context.user_data['photo'][i]:
                 files += InputMediaPhoto(media=context.user_data['files'][i])
@@ -200,7 +202,6 @@ def publish_post(update: Update, context: CallbackContext) -> int:
 
 
 def broadcast_html(context: CallbackContext, text: str):
-
     context.bot.send_message(
         chat_id=CHANNEL,
         text=text,
