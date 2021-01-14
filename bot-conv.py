@@ -272,6 +272,8 @@ if __name__ == '__main__':
     updater = Updater(TOKEN)
     dp = updater.dispatcher
 
+    dp.add_error_handler(error)
+    
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
     dp.add_handler(MessageHandler(Filters.update.channel_post | Filters.update.edited_channel_post, add_button))
@@ -289,8 +291,6 @@ if __name__ == '__main__':
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
-
-    dp.add_error_handler(error)
 
     updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
     updater.bot.setWebhook('https://ptb-militaernews.herokuapp.com/' + TOKEN)
