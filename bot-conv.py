@@ -69,7 +69,7 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 
 def text(update: Update, context: CallbackContext) -> int:
 
-    context.user_data['files'].clear()
+
 
     context.user_data['message'] = update.message.text_markdown_v2_urled
     context.user_data['remaining'] = 4
@@ -81,10 +81,10 @@ def text(update: Update, context: CallbackContext) -> int:
 
 def add_photo(update: Update, context: CallbackContext) -> int:
     if context.user_data['remaining'] == 4:
-        context.user_data['files'].append([update.message.photo[2].file_id])
+        context.user_data['files'] = [update.message.photo[2].file_id]
         context.user_data['photo'] = [True]
     else:
-        context.user_data['files'].append([update.message.photo[2].file_id])
+        context.user_data['files'][5 - context.user_data['remaining']] = update.message.photo[2].file_id
         context.user_data['photo'][5 - context.user_data['remaining']] = True
     return media_sent(update, context)
 
