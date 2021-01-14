@@ -78,7 +78,7 @@ def text(update: Update, context: CallbackContext) -> int:
 
 
 def add_photo(update: Update, context: CallbackContext) -> int:
-    if  context.user_data['files'] is None:
+    if context.user_data['files'] is None:
         context.user_data['photo'] = True
         context.user_data['files'] = [update.message.photo[2].file_id]
 
@@ -151,7 +151,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         context.bot.send_message(update.message.chat_id, text='ein Bild')
         if context.user_data['photo']:
             logger.info("----------" + str(context.user_data['files'][0]))
-            context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'][0], 'rb'))
+            context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0])
 
     else:
 
