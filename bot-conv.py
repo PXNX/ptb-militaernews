@@ -25,10 +25,8 @@ VERIFIED_USERS = (703453307, 525147382)
 SHOW_MORE = InlineKeyboardMarkup(
     [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')]])
 
-START_KEYBOARD = ReplyKeyboardMarkup(
-    [['Breaking news ‼️', 'Scheduled post 🕓']],
-    one_time_keyboard=True,
-    resize_keyboard=True)  # resize for small keyboards
+START_KEYBOARD = ReplyKeyboardMarkup([['Breaking news ‼️', 'Scheduled post 🕓']],
+                                     one_time_keyboard=True,resize_keyboard=True)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -70,60 +68,31 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 
 
 def text(update: Update, context: CallbackContext) -> int:
-    if verify(update.message, context):
-        context.user_data['message'] = update.message.text
-        msg = update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
-                                        parse_mode=ParseMode.HTML,
-                                        reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
-        context.user_data['remaining'] = 4
-        return MEDIA
+    context.user_data['message'] = update.message.text
+    update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
+    context.user_data['remaining'] = 4
+    context.user_data['files'] = []
+    return MEDIA
 
 
-def add_photo(update: Update, context: CallbackContext)-> int:
-    # user = update.message.from_user
-    # photo_file = update.message.photo[-1].get_file()
-    #  photo_file.download('user_photo.jpg')
-    #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
-
+def add_photo(update: Update, context: CallbackContext) -> int:
     context.user_data['files'] += update.message.photo[2].file_id
-    #  if update.message.media_group_id:
-    #    file_list = []
-
-    #  file_list.append(photo_file.file_id) # +=
-
-    #      context.user_data['files'] = file_list
-    #  else:
-
-    # if update.message.photo:
-    #     context.user_data['files'] = [update.message]  # [update.message.copy(update.message.chat_id)]
-
-    # elif update.message.video:
-    #    context.user_data['files'] = [update.message.video.get_file()]
-
-    # print(photo_file.file_id)
-
-    #  print(update.message.copy(update.message.chat_id).message_id)
     return media_sent(update, context)
 
 
-#  return message_preview(update, context)
-
-
-def add_video(update: Update, context: CallbackContext)-> int:
-    # message_html(update, context, str(update.message.video.get_file().file_id))
+def add_video(update: Update, context: CallbackContext) -> int:
     context.user_data['files'] += update.message.video.file_id
-    # return message_preview(update, context)
     return media_sent(update, context)
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
     context.user_data['files'] = None
-
-    # maybe something like getting the photo from a local storage
     return message_preview(update, context)
 
 
-def media_sent(update: Update, context: CallbackContext)-> int :
+def media_sent(update: Update, context: CallbackContext) -> int:
     remaining = context.user_data['remaining']
 
     if remaining is 0:
