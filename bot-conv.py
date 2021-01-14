@@ -26,7 +26,7 @@ SHOW_MORE = InlineKeyboardMarkup(
     [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')]])
 
 START_KEYBOARD = ReplyKeyboardMarkup([['Breaking news ‼️', 'Scheduled post 🕓']],
-                                     one_time_keyboard=True,resize_keyboard=True)
+                                     one_time_keyboard=True, resize_keyboard=True)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -78,11 +78,15 @@ def text(update: Update, context: CallbackContext) -> int:
 
 
 def add_photo(update: Update, context: CallbackContext) -> int:
+    if not context.user_data['files']:
+        context.user_data['photo'] = True
     context.user_data['files'] += update.message.photo[2].file_id
     return media_sent(update, context)
 
 
 def add_video(update: Update, context: CallbackContext) -> int:
+    if not context.user_data['files']:
+        context.user_data['photo'] = False
     context.user_data['files'] += update.message.video.file_id
     return media_sent(update, context)
 
@@ -101,10 +105,6 @@ def media_sent(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(text="You have " + str(remaining) + " photos/videos remaining.",
                               reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
     context.user_data['remaining'] -= 1
-
-
-def done(update: Update, context: CallbackContext) -> int:
-    return message_preview(update, context)
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
@@ -139,6 +139,8 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     elif len(context.user_data['files']) == 1:
 
         context.bot.send_message(update.message.chat_id, text='ein Bild')
+        if context.user_data['photo']:
+            context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'], 'rb'))
 
     else:
 
@@ -240,7 +242,7 @@ def cancel(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 
-def message_html(update, context, text):
+def message_html(update: Update, context: CallbackContext, text: str):
     return context.bot.send_message(chat_id=update.message.chat_id,
                                     text=text,
                                     parse_mode=ParseMode.HTML)
@@ -273,8 +275,8 @@ if __name__ == '__main__':
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             MEDIA: [MessageHandler(Filters.photo, add_photo),
                     MessageHandler(Filters.video, add_video),
-                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo),  # skip placeholder?
-                    MessageHandler(Filters.regex('Done ✅'), done)],
+                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo),
+                    MessageHandler(Filters.regex('Done ✅'), message_preview)],
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
