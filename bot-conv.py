@@ -123,6 +123,7 @@ def add_photo(update: Update, context: CallbackContext) -> int:
 
 def add_video(update: Update, context: CallbackContext) -> int:
     message_html(update, context, str(update.message.video.get_file().file_id))
+    context.user_data['files'] += update.message.video.file_id
     return message_preview(update, context)
 
 
