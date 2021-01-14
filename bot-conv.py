@@ -116,6 +116,8 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
     # maybe something like getting the photo from a local storage
     return message_preview(update, context)
 
+def done(update: Update, context: CallbackContext) -> int:
+    return message_preview(update, context)
 
 def message_preview(update: Update, context: CallbackContext) -> int:
     msg: Message = update.message
