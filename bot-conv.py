@@ -144,7 +144,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.send_message(update.message.chat_id, text='ein Bild')
         if context.user_data['photo']:
-            print("----------"+str(context.user_data['files'][0]))
+            logger.info("----------"+str(context.user_data['files'][0]))
             context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'][0], 'rb'))
 
     else:
