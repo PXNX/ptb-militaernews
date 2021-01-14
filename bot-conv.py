@@ -155,13 +155,13 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             files = [
                 InputMediaVideo(media=context.user_data['files'][0], caption=txt, parse_mode=ParseMode.MARKDOWN_V2)]
 
-        for i in range(len(context.user_data['files'])+ 1):
+        for i in range(len(context.user_data['files'])):
 
-            if context.user_data['photo'][i]:
-                files += InputMediaPhoto(media=context.user_data['files'][i], caption=txt,
+            if context.user_data['photo'][i+ 1]:
+                files += InputMediaPhoto(media=context.user_data['files'][i+ 1], caption=txt,
                                          parse_mode=ParseMode.MARKDOWN_V2)
             else:
-                files += InputMediaVideo(media=context.user_data['files'][i], caption=txt,
+                files += InputMediaVideo(media=context.user_data['files'][i+ 1], caption=txt,
                                          parse_mode=ParseMode.MARKDOWN_V2)
 
         context.bot.send_media_group(chat_id=update.message.chat_id,media=files,reply_markup=SHOW_MORE)
