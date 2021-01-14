@@ -112,19 +112,14 @@ def media_sent(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
-    #   msg: Message = update.message
-    update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post',
-                              parse_mode=ParseMode.HTML,
+    update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post', parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
-                                                               one_time_keyboard=True,
-                                                               resize_keyboard=True))
-   # context.bot.send_message(
-   #     chat_id=update.message.chat_id,
-    #    text=context.user_data['message'] + '\nFolge @militaernews',
-        # parse_mode=ParseMode.HTML,
-     #   reply_markup=InlineKeyboardMarkup.from_button(InlineKeyboardButton(
-     #       text='🔰 Weitere Meldungen 🔰',
-      #      url='https://t.me/militaernews')))
+                                                               one_time_keyboard=True, resize_keyboard=True))
+
+    if context.user_data['breaking']:
+        txt = '#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews'
+    else:
+        txt = '#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews'
 
     if not context.user_data['files']:
         # placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
@@ -143,8 +138,8 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     elif len(context.user_data['files']) == 1:
         if context.user_data['photo']:
             context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
-                                   caption=context.user_data['message'] + '\n\nFolge @militaernews',
-                                   parse_mode= ParseMode.MARKDOWN_V2,
+                                   caption=txt,
+                                   parse_mode=ParseMode.MARKDOWN_V2,
                                    reply_markup=InlineKeyboardMarkup.from_button(
                                        InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',
                                                             url='https://t.me/militaernews')))
@@ -154,40 +149,6 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     else:
 
         context.bot.send_message(update.message.chat_id, text='Media Group')
-
-        #  firstFile = context.user_data['files'][0]
-
-        #  first_file_caption: InputMediaPhoto = context.user_data['files'][0]
-
-        # if firstFile[1] == 0:
-        #     firstFileWithCaption: InputMediaPhoto = firstFile
-
-        #  elif firstFile[1] == 1:
-        #      firstFileWithCaption: InputMediaVideo = firstFile
-
-        #  context.user_data['files'][0].caption = context.user_data['message']
-
-        #  context.user_data['files'][0].caption = context.user_data['message']
-
-        #  currFile: MessageId = context.user_data['files'][0]
-
-        #   currFile.caption = 'HAW'
-
-        # currmsg: Message = currFile
-
-    #    currmsg: Message = context.user_data['files'][0]
-
-    # currmsg.caption = 'HAAAA'
-
-    #    currFile: InputMediaPhoto = currmsg.photo[2].get_file()
-
-    #     currmsg.caption = 'rgsgg'
-
-    #    currmsg.parse_mode = ParseMode.HTML
-
-    #    context.bot.sendMediaGroup()
-    #    context.bot.send_media_group(update.message.chat_id,
-    #                                 media=[InputMediaPhoto(currmsg.photo[2].get_file().file_id)])
 
     return PUBLISH
 
