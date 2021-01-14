@@ -72,9 +72,10 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 def text(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data['message'] = update.message.text
-        context.user_data['skippable'] = update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
+        msg = update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
+        context.user_data['skippable'] = msg.message_id
         return MEDIA
 
 
