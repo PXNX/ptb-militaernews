@@ -68,7 +68,7 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 
 
 def text(update: Update, context: CallbackContext) -> int:
-    context.user_data['message'] = update.message.text_markdown
+    context.user_data['message'] = update.message.text_markdown_v2_urled
     context.user_data['remaining'] = 4
     context.user_data['photo'] = None
     context.user_data['files'] = None
