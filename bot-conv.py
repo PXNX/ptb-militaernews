@@ -85,10 +85,16 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
     if(context.user_data['skippable'] is not None):
-        context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
+        context.bot.edit_message_text(text="pizzzza", chat_id=update.message.chat_id,
                                               message_id=context.user_data['skippable'],
                                               reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
-        context.user_data['skippable'] = None
+        
+        
+       #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
+       #                                       message_id=context.user_data['skippable'],
+      #                                        reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+      
+        context.user_data['skippable'] = None # what about simply sending a new message??
                                               
     context.user_data['files'] += update.message.photo[2].file_id
   #  if update.message.media_group_id:
