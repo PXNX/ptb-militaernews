@@ -85,8 +85,7 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
     if(context.user_data['skippable'] is not None):
-        context.bot.edit_message_text(text="pizzzza", chat_id=update.message.chat_id,
-                                              message_id=context.user_data['skippable'],
+        update.message.reply_text(text="You have 9 photos/videos remaining.", 
                                               reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
         
         
