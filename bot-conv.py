@@ -122,29 +122,24 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         txt = context.user_data['message'] + '\nFolge @militaernews'
 
     if not context.user_data['files']:
-        # placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
-        #   placeholder.caption = context.user_data['message'] + '\n\n🔰 Folge @militaernews für mehr 🔰'
-
-        # context.bot.send_media_group(update.message.chat_id,
-        #                              media=[placeholder],
-        #                             )
         context.bot.send_photo(
             update.message.chat_id,
             photo=open('eilmeldung.png', 'rb'),
-            caption=context.user_data['message'] + '\n\nFolge @militaernews',
-            reply_markup=InlineKeyboardMarkup.from_button(
-                InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')))
+            caption=txt,
+            parse_mode=ParseMode.MARKDOWN_V2,
+            reply_markup=SHOW_MORE)
 
     elif len(context.user_data['files']) == 1:
         if context.user_data['photo']:
             context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
                                    caption=txt,
                                    parse_mode=ParseMode.MARKDOWN_V2,
-                                   reply_markup=InlineKeyboardMarkup.from_button(
-                                       InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰',
-                                                            url='https://t.me/militaernews')))
+                                   reply_markup=SHOW_MORE)
         else:
-            context.bot.send_video(chat_id=update.message.chat_id, photo=context.user_data['files'][0])
+            context.bot.send_video(chat_id=update.message.chat_id, video=context.user_data['files'][0],
+                                   caption=txt,
+                                   parse_mode=ParseMode.MARKDOWN_V2,
+                                   reply_markup=SHOW_MORE)
 
     else:
 
