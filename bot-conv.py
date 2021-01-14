@@ -79,7 +79,7 @@ def text(update: Update, context: CallbackContext) -> int:
         return MEDIA
 
 
-def add_photo(update: Update, context: CallbackContext):
+def add_photo(update: Update, context: CallbackContext)-> int:
     # user = update.message.from_user
     # photo_file = update.message.photo[-1].get_file()
     #  photo_file.download('user_photo.jpg')
@@ -103,15 +103,17 @@ def add_photo(update: Update, context: CallbackContext):
     # print(photo_file.file_id)
 
     #  print(update.message.copy(update.message.chat_id).message_id)
-    media_sent(update, context)
-  #  return message_preview(update, context)
+    return media_sent(update, context)
 
 
-def add_video(update: Update, context: CallbackContext):
+#  return message_preview(update, context)
+
+
+def add_video(update: Update, context: CallbackContext)-> int:
     # message_html(update, context, str(update.message.video.get_file().file_id))
     context.user_data['files'] += update.message.video.file_id
     # return message_preview(update, context)
-    media_sent(update, context)
+    return media_sent(update, context)
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
@@ -121,11 +123,11 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
     return message_preview(update, context)
 
 
-def media_sent(update: Update, context: CallbackContext):
+def media_sent(update: Update, context: CallbackContext)-> int :
     remaining = context.user_data['remaining']
 
     if remaining is 0:
-        done(update, context)
+        return message_preview(update, context)
 
     update.message.reply_text(text="You have " + str(remaining) + " photos/videos remaining.",
                               reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
