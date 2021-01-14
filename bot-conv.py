@@ -125,7 +125,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         txt = context.user_data['message'] + '\nFolge @militaernews'
 
     if not context.user_data['files']:
-        context.bot.send_photo(
+        msg = context.bot.send_photo(
             update.message.chat_id,
             photo=open('eilmeldung.png', 'rb'),
             caption=txt,
@@ -134,12 +134,12 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     elif len(context.user_data['files']) == 1:
         if context.user_data['photo'][0]:
-            context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
+            msg = context.bot.send_photo(chat_id=update.message.chat_id, photo=context.user_data['files'][0],
                                    caption=txt,
                                    parse_mode=ParseMode.MARKDOWN_V2,
                                    reply_markup=SHOW_MORE)
         else:
-            context.bot.send_video(chat_id=update.message.chat_id, video=context.user_data['files'][0],
+            msg = context.bot.send_video(chat_id=update.message.chat_id, video=context.user_data['files'][0],
                                    caption=txt,
                                    parse_mode=ParseMode.MARKDOWN_V2,
                                    reply_markup=SHOW_MORE)
@@ -162,7 +162,12 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             else:
                 files += InputMediaVideo(media=context.user_data['files'][i])
 
-        context.bot.send_media_group(chat_id=update.message.chat_id, media=files, reply_markup=SHOW_MORE)
+        # how to copy it?
+        msg = context.bot.send_media_group(chat_id=update.message.chat_id, media=files, reply_markup=SHOW_MORE)
+
+    context.user_data['post'] = msg.copy()
+
+    context.bot.send_message(msg.copy())
 
     return PUBLISH
 
@@ -195,6 +200,7 @@ def publish_post(update: Update, context: CallbackContext) -> int:
 
 
 def broadcast_html(context: CallbackContext, text: str):
+
     context.bot.send_message(
         chat_id=CHANNEL,
         text=text,
