@@ -73,9 +73,9 @@ def text(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data['message'] = update.message.text
         msg = update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
-                                  parse_mode=ParseMode.HTML,
-                                  reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
-        context.user_data['skippable'] = msg.message_id
+                                        parse_mode=ParseMode.HTML,
+                                        reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
+        context.user_data['remaining'] = 9
         return MEDIA
 
 
@@ -84,28 +84,30 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     # photo_file = update.message.photo[-1].get_file()
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
-    if(context.user_data['skippable'] is not None):
-        update.message.reply_text(text="You have 9 photos/videos remaining.", 
-                                              reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
-        #maybe count down.. maximum number of files to 3 or so?
-        
-       #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
-       #                                       message_id=context.user_data['skippable'],
-      #                                        reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
-      
-        context.user_data['skippable'] = None # what about simply sending a new message??
-                                              
+    remaining = context.user_data['remaining']
+
+    if remaining is not 0:
+        update.message.reply_text(text="You have 9 photos/videos remaining.",
+                                  reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+        # maybe count down.. maximum number of files to 3 or so?
+
+        #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
+        #                                       message_id=context.user_data['skippable'],
+        #                                        reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+
+        context.user_data['remaining'] -= 1  # what about simply sending a new message??
+
     context.user_data['files'] += update.message.photo[2].file_id
-  #  if update.message.media_group_id:
+    #  if update.message.media_group_id:
     #    file_list = []
 
-        #  file_list.append(photo_file.file_id) # +=
+    #  file_list.append(photo_file.file_id) # +=
 
-  #      context.user_data['files'] = file_list
-  #  else:
+    #      context.user_data['files'] = file_list
+    #  else:
 
-        # if update.message.photo:
-   #     context.user_data['files'] = [update.message]  # [update.message.copy(update.message.chat_id)]
+    # if update.message.photo:
+    #     context.user_data['files'] = [update.message]  # [update.message.copy(update.message.chat_id)]
 
     # elif update.message.video:
     #    context.user_data['files'] = [update.message.video.get_file()]
@@ -116,10 +118,10 @@ def add_photo(update: Update, context: CallbackContext) -> int:
 
     return message_preview(update, context)
 
-def add_video(update: Update, context: CallbackContext)->int:
-    message_html(str(update.message.video.get_file().file_id))
-    return message_preview(update, context)
 
+def add_video(update: Update, context: CallbackContext) -> int:
+    message_html(update, context, str(update.message.video.get_file().file_id))
+    return message_preview(update, context)
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
@@ -128,8 +130,10 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
     # maybe something like getting the photo from a local storage
     return message_preview(update, context)
 
+
 def done(update: Update, context: CallbackContext) -> int:
     return message_preview(update, context)
+
 
 def message_preview(update: Update, context: CallbackContext) -> int:
     msg: Message = update.message
@@ -287,11 +291,10 @@ if __name__ == '__main__':
     dp = updater.dispatcher
 
     dp.add_error_handler(error)
-    
+
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
     dp.add_handler(MessageHandler(Filters.update.channel_post | Filters.update.edited_channel_post, add_button))
-
 
     dp.add_handler(ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking news ‼️'), new_breaking),
@@ -300,8 +303,8 @@ if __name__ == '__main__':
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
             MEDIA: [MessageHandler(Filters.photo, add_photo),
                     MessageHandler(Filters.video, add_video),
-                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo), # skip placeholder?
-                    MessageHandler(Filters.regex('Done ✅'), done)], 
+                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo),  # skip placeholder?
+                    MessageHandler(Filters.regex('Done ✅'), done)],
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
