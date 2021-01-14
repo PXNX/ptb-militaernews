@@ -20,7 +20,7 @@ from telegram.ext import (
 PORT = int(os.environ.get('PORT', 5000))
 TOKEN = os.environ.get('TOKEN')
 CHANNEL = -1001302593973
-VERIFIED_USERS = [703453307, 525147382]
+VERIFIED_USERS = (703453307, 525147382)
 
 SHOW_MORE = InlineKeyboardMarkup(
     [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')]])
@@ -104,9 +104,9 @@ def add_photo(update: Update, context: CallbackContext) -> int:
 
     return message_preview(update, context)
 
-def add_video(update: Update, context: CallbackContext):
+def add_video(update: Update, context: CallbackContext)->int:
     message_html(str(update.message.video.file_id))
-
+    return message_preview(update, context)
 
 
 
