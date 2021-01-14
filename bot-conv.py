@@ -117,9 +117,9 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                                                                one_time_keyboard=True, resize_keyboard=True))
 
     if context.user_data['breaking']:
-        txt = '#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews'
+        txt = '\#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews'
     else:
-        txt = '#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews'
+        txt = context.user_data['message'] + '\nFolge @militaernews'
 
     if not context.user_data['files']:
         # placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
@@ -158,7 +158,7 @@ def publish(update: Update, context: CallbackContext) -> int:
     if context.user_data['breaking']:
         broadcast_html(
             context,
-            '#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews')
+            '\#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews')
     else:
         context.bot.send_message(
             chat_id=CHANNEL,
