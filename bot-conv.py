@@ -155,7 +155,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             files = [
                 InputMediaVideo(media=context.user_data['files'][0], caption=txt, parse_mode=ParseMode.MARKDOWN_V2)]
 
-        for i in range(1 + len(context.user_data['files'])):
+        for i in range(1, 1 + len(context.user_data['files'])):
 
             if context.user_data['photo'][i]:
                 files += InputMediaPhoto(media=context.user_data['files'][i])
