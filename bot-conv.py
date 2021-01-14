@@ -68,10 +68,10 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 
 
 def text(update: Update, context: CallbackContext) -> int:
-    context.user_data['message'] = update.message.text_markdown_v2_urled
-    context.user_data['remaining'] = 4
     context.user_data['photo'] = []
     context.user_data['files'] = []
+    context.user_data['message'] = update.message.text_markdown_v2_urled
+    context.user_data['remaining'] = 4
     update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
@@ -79,11 +79,11 @@ def text(update: Update, context: CallbackContext) -> int:
 
 
 def add_photo(update: Update, context: CallbackContext) -> int:
-    if context.user_data['files'] is []:
-        context.user_data['files'] = [str(update.message.photo.file_id)]
+    if not context.user_data['files']:
+        context.user_data['files'] = [update.message.photo[2].file_id]
         context.user_data['photo'] = [True]
     else:
-        context.user_data['files'].append(str(update.message.photo.file_id))
+        context.user_data['files'].append(update.message.photo[2].file_id)
         context.user_data['photo'][5 - context.user_data['remaining']] = True
     return media_sent(update, context)
 
