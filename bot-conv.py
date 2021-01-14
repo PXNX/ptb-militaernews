@@ -75,7 +75,7 @@ def text(update: Update, context: CallbackContext) -> int:
         msg = update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                                         parse_mode=ParseMode.HTML,
                                         reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
-        context.user_data['remaining'] = 9
+        context.user_data['remaining'] = 4
         return MEDIA
 
 
@@ -86,16 +86,18 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
     remaining = context.user_data['remaining']
 
-    if remaining is not 0:
-        update.message.reply_text(text="You have 9 photos/videos remaining.",
-                                  reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
-        # maybe count down.. maximum number of files to 3 or so?
+    if remaining is 0:
+        return PUBLISH
 
-        #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
-        #                                       message_id=context.user_data['skippable'],
-        #                                        reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+    update.message.reply_text(text="You have " + remaining + " photos/videos remaining.",
+                              reply_markup=ReplyKeyboardMarkup([['Done ✅']]))  # or ignore it after first one
+    # maybe count down.. maximum number of files to 3 or so?
 
-        context.user_data['remaining'] -= 1  # what about simply sending a new message??
+    #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
+    #                                       message_id=context.user_data['skippable'],
+    #                                        reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+
+    context.user_data['remaining'] -= 1  # what about simply sending a new message??
 
     context.user_data['files'] += update.message.photo[2].file_id
     #  if update.message.media_group_id:
@@ -125,7 +127,7 @@ def add_video(update: Update, context: CallbackContext) -> int:
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
-    context.user_data['files'] = []
+    context.user_data['files'] = None
 
     # maybe something like getting the photo from a local storage
     return message_preview(update, context)
@@ -151,7 +153,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
             url='https://t.me/militaernews')))
 
     if not context.user_data['files']:
-        placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
+        # placeholder = InputMediaPhoto(open('eilmeldung.png', 'rb'))
         #   placeholder.caption = context.user_data['message'] + '\n\n🔰 Folge @militaernews für mehr 🔰'
 
         # context.bot.send_media_group(update.message.chat_id,
@@ -210,8 +212,6 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
 
 ## What about SUBMIT and CANCEL instead?
-
-
 def publish(update: Update, context: CallbackContext) -> int:
     if context.user_data['breaking']:
         broadcast_html(
@@ -238,7 +238,7 @@ def publish_post(update: Update, context: CallbackContext) -> int:
     return publish_success(update, context)
 
 
-def broadcast_html(context: CallbackContext, text):
+def broadcast_html(context: CallbackContext, text: str):
     context.bot.send_message(
         chat_id=CHANNEL,
         text=text,
