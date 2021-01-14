@@ -76,7 +76,7 @@ def text(update: Update, context: CallbackContext) -> int:
     return MEDIA
 
 
-def add_photo(update: Update, context: CallbackContext) -> int:
+def add_photo(update: Update, context: CallbackContext) -> int:#
     if context.user_data['remaining'] == 4:
         context.user_data['files']: list = [str(update.message.photo[2].file_id)]
         context.user_data['photo']: list = [True]
