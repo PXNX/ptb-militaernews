@@ -31,10 +31,9 @@ START_KEYBOARD = ReplyKeyboardMarkup(
     resize_keyboard=True)  # resize for small keyboards
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
 logger = logging.getLogger(__name__)
 
-NEWS, PHOTO, PUBLISH = range(3)
+NEWS, MEDIA, PUBLISH = range(3)
 
 
 # Replace with Filter
@@ -76,25 +75,25 @@ def text(update: Update, context: CallbackContext) -> int:
         update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
-        return PHOTO
+        return MEDIA
 
 
-def photo(update: Update, context: CallbackContext) -> int:
+def add_photo(update: Update, context: CallbackContext) -> int:
     # user = update.message.from_user
     # photo_file = update.message.photo[-1].get_file()
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
 
-    if update.message.media_group_id:
-        file_list = []
+  #  if update.message.media_group_id:
+    #    file_list = []
 
         #  file_list.append(photo_file.file_id) # +=
 
-        context.user_data['files'] = file_list
-    else:
+  #      context.user_data['files'] = file_list
+  #  else:
 
         # if update.message.photo:
-        context.user_data['files'] = [update.message]  # [update.message.copy(update.message.chat_id)]
+   #     context.user_data['files'] = [update.message]  # [update.message.copy(update.message.chat_id)]
 
     # elif update.message.video:
     #    context.user_data['files'] = [update.message.video.get_file()]
@@ -104,6 +103,11 @@ def photo(update: Update, context: CallbackContext) -> int:
     #  print(update.message.copy(update.message.chat_id).message_id)
 
     return message_preview(update, context)
+
+def add_video(update: Update, context: CallbackContext):
+    message_html(str(update.message.video.file_id))
+
+
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
@@ -278,8 +282,8 @@ if __name__ == '__main__':
                       MessageHandler(Filters.regex('Scheduled post 🕓'), new_post)],
         states={
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
-            PHOTO: [MessageHandler(Filters.photo, photo),
-                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo)],  # skip placeholder?
+            MEDIA: [MessageHandler(Filters.photo, add_photo),MessageHandler(Filters.video, add_video),
+                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo),MessageHandler(Filters.regex('Done ✅'), done)],  # skip placeholder?
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
