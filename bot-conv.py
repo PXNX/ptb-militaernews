@@ -140,7 +140,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.send_message(update.message.chat_id, text='ein Bild')
         if context.user_data['photo']:
-            context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'], 'rb'))
+            context.bot.send_photo(chat_id=update.message.chat_id, photo=open(context.user_data['files'][0], 'rb'))
 
     else:
 
