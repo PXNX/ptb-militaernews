@@ -145,6 +145,8 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
         context.bot.send_message(update.message.chat_id, text='Media Group')
 
+        context.bot.send_media_group(update.message.chat_id, media=context.user_data['files'])
+
     return PUBLISH
 
 
