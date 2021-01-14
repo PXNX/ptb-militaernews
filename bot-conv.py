@@ -282,16 +282,17 @@ if __name__ == '__main__':
                       MessageHandler(Filters.regex('Scheduled post 🕓'), new_post)],
         states={
             NEWS: [MessageHandler(Filters.regex('.*'), text)],
-            MEDIA: [MessageHandler(Filters.photo, add_photo),MessageHandler(Filters.video, add_video),
-                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo),MessageHandler(Filters.regex('Done ✅'), done)],  # skip placeholder?
+            MEDIA: [MessageHandler(Filters.photo, add_photo),
+                    MessageHandler(Filters.video, add_video),
+                    MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo), # skip placeholder?
+                    MessageHandler(Filters.regex('Done ✅'), done)], 
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
 
-    #  dp.add_error_handler(error)
+    dp.add_error_handler(error)
 
     updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
     updater.bot.setWebhook('https://ptb-militaernews.herokuapp.com/' + TOKEN)
-
-    updater.start_polling()  ##
+    updater.start_polling()
     updater.idle()
