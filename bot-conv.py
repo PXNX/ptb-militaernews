@@ -70,8 +70,8 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 def text(update: Update, context: CallbackContext) -> int:
     context.user_data['message'] = update.message.text_markdown_v2_urled
     context.user_data['remaining'] = 4
-    context.user_data['photo'] = None
-    context.user_data['files'] = None
+    context.user_data['photo'] = []
+    context.user_data['files'] = []
     update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
