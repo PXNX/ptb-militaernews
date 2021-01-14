@@ -79,25 +79,11 @@ def text(update: Update, context: CallbackContext) -> int:
         return MEDIA
 
 
-def add_photo(update: Update, context: CallbackContext) -> int:
+def add_photo(update: Update, context: CallbackContext):
     # user = update.message.from_user
     # photo_file = update.message.photo[-1].get_file()
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
-    remaining = context.user_data['remaining']
-
-    if remaining is 0:
-        return PUBLISH
-
-    update.message.reply_text(text="You have " + str(remaining) + " photos/videos remaining.",
-                              reply_markup=ReplyKeyboardMarkup([['Done ✅']]))  # or ignore it after first one
-    # maybe count down.. maximum number of files to 3 or so?
-
-    #   context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
-    #                                       message_id=context.user_data['skippable'],
-    #                                        reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
-
-    context.user_data['remaining'] -= 1  # what about simply sending a new message??
 
     context.user_data['files'] += update.message.photo[2].file_id
     #  if update.message.media_group_id:
@@ -117,14 +103,15 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     # print(photo_file.file_id)
 
     #  print(update.message.copy(update.message.chat_id).message_id)
+    media_sent(update, context)
+  #  return message_preview(update, context)
 
-    return message_preview(update, context)
 
-
-def add_video(update: Update, context: CallbackContext) -> int:
-    message_html(update, context, str(update.message.video.get_file().file_id))
+def add_video(update: Update, context: CallbackContext):
+    # message_html(update, context, str(update.message.video.get_file().file_id))
     context.user_data['files'] += update.message.video.file_id
-    return message_preview(update, context)
+    # return message_preview(update, context)
+    media_sent(update, context)
 
 
 def skip_photo(update: Update, context: CallbackContext) -> int:
@@ -132,6 +119,17 @@ def skip_photo(update: Update, context: CallbackContext) -> int:
 
     # maybe something like getting the photo from a local storage
     return message_preview(update, context)
+
+
+def media_sent(update: Update, context: CallbackContext):
+    remaining = context.user_data['remaining']
+
+    if remaining is 0:
+        done(update, context)
+
+    update.message.reply_text(text="You have " + str(remaining) + " photos/videos remaining.",
+                              reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+    context.user_data['remaining'] -= 1
 
 
 def done(update: Update, context: CallbackContext) -> int:
