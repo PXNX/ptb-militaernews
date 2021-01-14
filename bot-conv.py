@@ -89,7 +89,7 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     if remaining is 0:
         return PUBLISH
 
-    update.message.reply_text(text="You have " + remaining + " photos/videos remaining.",
+    update.message.reply_text(text="You have " + str(remaining) + " photos/videos remaining.",
                               reply_markup=ReplyKeyboardMarkup([['Done ✅']]))  # or ignore it after first one
     # maybe count down.. maximum number of files to 3 or so?
 
