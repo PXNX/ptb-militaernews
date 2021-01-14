@@ -72,7 +72,7 @@ def message_new(update: Update, context: CallbackContext, text: str) -> int:
 def text(update: Update, context: CallbackContext) -> int:
     if verify(update.message, context):
         context.user_data['message'] = update.message.text
-        update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
+        context.user_data['skippable'] = update.message.reply_text('<b>Step 2 of 3</b>\nSend photos or videos as an album',
                                   parse_mode=ParseMode.HTML,
                                   reply_markup=ReplyKeyboardMarkup([['Use placeholder 🖼️']]))
         return MEDIA
@@ -83,6 +83,12 @@ def add_photo(update: Update, context: CallbackContext) -> int:
     # photo_file = update.message.photo[-1].get_file()
     #  photo_file.download('user_photo.jpg')
     #  logger.info('Photo of %s: %s', user.first_name, 'user_photo.jpg')
+    if(context.user_data['skippable'] is not None):
+        context.bot.edit_message_reply_markup(chat_id=update.message.chat_id,
+                                              message_id=context.user_data['skippable'],
+                                              reply_markup=ReplyKeyboardMarkup([['Done ✅']]))
+        context.user_data['skippable'] = None
+                                              
     context.user_data['files'] += update.message.photo[2].file_id
   #  if update.message.media_group_id:
     #    file_list = []
