@@ -233,7 +233,7 @@ def message_preview(update: Update, context: CallbackContext):
             debug(f"[DEBUG] message_preview: list files changed to: {files}")
 
         debug(f"[DEBUG] message_preview: for loop: range(1, len(context.user_data['files']) (0, {len(context.user_data['files'])})")
-        for i in range(0, len(context.user_data['files'])):
+        for i in range(1, len(context.user_data['files'])):
             debug(f"[DEBUG] message_preview: for loop: i == {i}")
             if context.user_data['photo'][i]:
                 debug(f"[DEBUG] message_preview: context.user_data['photo'][i] ({context.user_data['photo'][i]})")
