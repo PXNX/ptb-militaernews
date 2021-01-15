@@ -76,7 +76,7 @@ def text(update: Update, context: CallbackContext) -> int:
     return MEDIA
 
 
-def add_photo(update: Update, context: CallbackContext) -> int:#
+def add_photo(update: Update, context: CallbackContext) -> int:  #
     if context.user_data['remaining'] == 4:
         context.user_data['files']: list = [str(update.message.photo[-1].file_id)]
         context.user_data['photo']: list = [True]
@@ -163,9 +163,8 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                 files += InputMediaVideo(media=context.user_data['files'][i])
 
         # how to copy it?
-        msg = context.bot.send_media_group(chat_id=update.message.chat_id, media=files, reply_markup=SHOW_MORE)
+        msg = context.bot.send_media_group(chat_id=update.message.chat_id, media=files)
         msg[0].edit_reply_markup(reply_markup=SHOW_MORE)
-
 
     context.user_data['post'] = msg.copy()
 
