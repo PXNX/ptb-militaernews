@@ -166,9 +166,14 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         msg = context.bot.send_media_group(chat_id=update.message.chat_id, media=files)
         msg[0].edit_reply_markup(reply_markup=SHOW_MORE)
 
+    update.message.reply_text("-----")
+    context.Bot.copy_message(CHANNEL,update.message.chat_id,msg.id)    
+        
     context.user_data['post'] = msg.copy()
 
     context.bot.send_message(msg.copy())
+    
+    
 
     return PUBLISH
 
