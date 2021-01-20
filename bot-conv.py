@@ -118,7 +118,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
                                                                one_time_keyboard=True, resize_keyboard=True))
-    
+
     update.message.reply_text('Hello??')
     update.message.reply_text("-----")
 
@@ -171,27 +171,15 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         msg[0].edit_reply_markup(reply_markup=SHOW_MORE)
 
     update.message.reply_text('Does this text work??')
-    
-    context.bot.copy_message(chat_id=CHANNEL,
-                             from_chat_id=update.message.chat_id,
-                             message_id=200)
-    
-    update.message.reply_text('Copy worked 1 :)')
-    
-    context.bot.copy_message(chat_id=CHANNEL,
-                             from_chat_id=update.message.chat_id,
-                             message_id=298566)
-    
-    update.message.reply_text('Copy worked 2 :)')
 
     context.bot.copy_message(chat_id=CHANNEL,
                              from_chat_id=update.message.chat_id,
                              message_id=msg.message_id)
-    
+
     update.message.reply_text('Copy worked!!')
-     
-    #context.user_data['post'] = msg.copy()
-   # context.bot.send_message(msg.copy())
+
+    # context.user_data['post'] = msg.copy()
+    # context.bot.send_message(msg.copy())
 
     return PUBLISH
 
@@ -293,7 +281,7 @@ if __name__ == '__main__':
             PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
-    
+
     dp.bot.send_message(chat_id=703453307, text='BOT ONLINE ✅')
 
     updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
