@@ -115,9 +115,9 @@ def media_sent(update: Update, context: CallbackContext) -> int:
 def message_preview(update: Update, context: CallbackContext) -> int:
     update.message.reply_text("-----")
     update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post',
-                              parse_mode=ParseMode.HTML)
-                          #    reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
-                                                               #one_time_keyboard=True, resize_keyboard=True)
+                              parse_mode=ParseMode.HTML,
+                              reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
+                                                               one_time_keyboard=True, resize_keyboard=True))
     
     update.message.reply_text('Hello??')
     update.message.reply_text("-----")
@@ -172,13 +172,16 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     update.message.reply_text('Does this text work??')
     
+    context.Bot.copy_message(CHANNEL,update.message.chat_id,msg.id)
+    
+    update.message.reply_text('Copy worked!!')
     
     
       
         
     #context.user_data['post'] = msg.copy()
     
-   # context.Bot.copy_message(CHANNEL,update.message.chat_id,msg.id)  
+   
 
    # context.bot.send_message(msg.copy())
     
