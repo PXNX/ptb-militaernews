@@ -174,20 +174,24 @@ def message_preview(update: Update, context: CallbackContext) -> int:
     
     context.Bot.copy_message(chat_id=CHANNEL,
                              from_chat_id=update.message.chat_id,
+                             message_id=200)
+    
+    update.message.reply_text('Copy worked 1 :)')
+    
+    context.Bot.copy_message(chat_id=CHANNEL,
+                             from_chat_id=update.message.chat_id,
+                             message_id=298566)
+    
+    update.message.reply_text('Copy worked 2 :)')
+
+    context.Bot.copy_message(chat_id=CHANNEL,
+                             from_chat_id=update.message.chat_id,
                              message_id=msg.message_id)
     
     update.message.reply_text('Copy worked!!')
-    
-    
-      
-        
+     
     #context.user_data['post'] = msg.copy()
-    
-   
-
    # context.bot.send_message(msg.copy())
-    
-    
 
     return PUBLISH
 
