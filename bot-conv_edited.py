@@ -113,7 +113,7 @@ def add_photo(update: Update, context: CallbackContext):
     debug(context.user_data)
     if context.user_data['remaining'] == 4:
         debug("[DEBUG] function add_photo: context.user_data['remaining'] == 4")
-        context.user_data['files'] = list([str(update.message.photo[2].file_id)])
+        context.user_data['files'] = list([str(update.message.photo[-1].file_id)])
         debug(f"[DEBUG] add_photo: context.user_data['files'] set to: {list([str(update.message.photo[2].file_id)])}")
         context.user_data['photo'] = list([True])
         debug("[DEBUG] add_photo: context.user_data['photo'] set to: [True]")
@@ -121,7 +121,7 @@ def add_photo(update: Update, context: CallbackContext):
         debug(context.user_data)
     else:
         debug("[DEBUG] function add_photo: context.user_data['remaining'] != 4")
-        context.user_data['files'].append(str(update.message.photo[2].file_id))
+        context.user_data['files'].append(str(update.message.photo[-1].file_id))
         debug(f"[DEBUG] add_photo: context.user_data['files'] appended: {str(update.message.photo[2].file_id)}")
         context.user_data['photo'].append(True)
         debug("[DEBUG] add_photo: context.user_data['photo'] appended: True")

@@ -172,19 +172,19 @@ def message_preview(update: Update, context: CallbackContext) -> int:
 
     update.message.reply_text('Does this text work??')
     
-    context.Bot.copy_message(chat_id=CHANNEL,
+    context.bot.copy_message(chat_id=CHANNEL,
                              from_chat_id=update.message.chat_id,
                              message_id=200)
     
     update.message.reply_text('Copy worked 1 :)')
     
-    context.Bot.copy_message(chat_id=CHANNEL,
+    context.bot.copy_message(chat_id=CHANNEL,
                              from_chat_id=update.message.chat_id,
                              message_id=298566)
     
     update.message.reply_text('Copy worked 2 :)')
 
-    context.Bot.copy_message(chat_id=CHANNEL,
+    context.bot.copy_message(chat_id=CHANNEL,
                              from_chat_id=update.message.chat_id,
                              message_id=msg.message_id)
     
