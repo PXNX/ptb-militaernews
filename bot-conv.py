@@ -290,8 +290,7 @@ if __name__ == '__main__':
         fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     ))
     
-    bot = telegram.Bot(token=TOKEN)
-    bot.send_message(chat_id=703453307, text='BOT ONLINE ✅')
+    dp.bot.send_message(chat_id=703453307, text='BOT ONLINE ✅')
 
     updater.start_webhook(listen='0.0.0.0', port=PORT, url_path=TOKEN)
     updater.bot.setWebhook('https://ptb-militaernews.herokuapp.com/' + TOKEN)
