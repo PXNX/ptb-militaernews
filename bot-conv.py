@@ -167,11 +167,16 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         msg[0].edit_reply_markup(reply_markup=SHOW_MORE)
 
     update.message.reply_text("-----")
-    context.Bot.copy_message(CHANNEL,update.message.chat_id,msg.id)    
+    
+    
+    
+      
         
-    context.user_data['post'] = msg.copy()
+    #context.user_data['post'] = msg.copy()
+    
+   # context.Bot.copy_message(CHANNEL,update.message.chat_id,msg.id)  
 
-    context.bot.send_message(msg.copy())
+   # context.bot.send_message(msg.copy())
     
     
 
