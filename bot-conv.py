@@ -113,10 +113,13 @@ def media_sent(update: Update, context: CallbackContext) -> int:
 
 
 def message_preview(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text("-----")
     update.message.reply_text('<b>Step 3 of 3</b>\nPreview the generated post',
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
                                                                one_time_keyboard=True, resize_keyboard=True))
+    update.message.reply_text("-----")
+    update.message.reply_text("-----")
 
     if context.user_data['breaking']:
         txt = '\#EILMELDUNG ‼️\n\n' + context.user_data['message'] + '\nFolge @militaernews'
