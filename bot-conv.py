@@ -118,7 +118,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                               parse_mode=ParseMode.HTML,
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
                                                                one_time_keyboard=True, resize_keyboard=True))
-    update.message.reply_text("-----")
+    update.message.reply_text('Hello??')
     update.message.reply_text("-----")
 
     if context.user_data['breaking']:
@@ -169,7 +169,7 @@ def message_preview(update: Update, context: CallbackContext) -> int:
         msg = context.bot.send_media_group(chat_id=update.message.chat_id, media=files)
         msg[0].edit_reply_markup(reply_markup=SHOW_MORE)
 
-    update.message.reply_text("-----")
+    update.message.reply_text('Does this text work??')
     
     
     
