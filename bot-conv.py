@@ -264,19 +264,17 @@ def error(update: Update, context: CallbackContext):
 
 
 if __name__ == '__main__':
-    
     authenticator = IAMAuthenticator('cI4aKEIsxzka7kQpRrc0UlzzHQzmL7JaXd8op3EW8wqj')
-    language_translator = LanguageTranslatorV3(version='2018-05-01',authenticator=authenticator)
+    language_translator = LanguageTranslatorV3(version='2018-05-01', authenticator=authenticator)
 
-    language_translator.set_service_url('https://api.eu-de.language-translator.watson.cloud.ibm.com/instances/a725cd68-9d05-426c-b0e9-28bc298cd0f6')
-    
+    language_translator.set_service_url(
+        'https://api.eu-de.language-translator.watson.cloud.ibm.com/instances/a725cd68-9d05-426c-b0e9-28bc298cd0f6')
+
     translation = language_translator.translate(
-    text='Hello, how are you today?',
-    model_id='en-es').get_result()
+        text='Hello, how are you today?',
+        model_id='en-es').get_result()
     print(json.dumps(translation, indent=2, ensure_ascii=False))
-    
-    
-    
+
     updater = Updater(TOKEN)
     dp = updater.dispatcher
 
