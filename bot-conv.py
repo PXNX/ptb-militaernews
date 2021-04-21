@@ -23,12 +23,13 @@ from telegram.ext import (
 
 authenticator = IAMAuthenticator('cI4aKEIsxzka7kQpRrc0UlzzHQzmL7JaXd8op3EW8wqj')
 language_translator = LanguageTranslatorV3(version='2018-05-01', authenticator=authenticator)
-language_translator.set_service_url('https://api.eu-de.language-translator.watson.cloud.ibm.com/instances/a725cd68-9d05-426c-b0e9-28bc298cd0f6')
+language_translator.set_service_url(
+    'https://api.eu-de.language-translator.watson.cloud.ibm.com/instances/a725cd68-9d05-426c-b0e9-28bc298cd0f6')
 
 PORT = int(os.environ.get('PORT', 5000))
 TOKEN = os.environ.get('TOKEN')
 CHANNEL = -1001302593973
-VERIFIED_USERS = (703453307, 525147382)
+VERIFIED_USERS = (703453307, 525147382, 1103452154)
 
 SHOW_MORE = InlineKeyboardMarkup(
     [[InlineKeyboardButton(text='🔰 Weitere Meldungen 🔰', url='https://t.me/militaernews')]])
@@ -127,14 +128,15 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                               reply_markup=ReplyKeyboardMarkup([['Submit post 📣', 'Cancel 🗑']],
                                                                one_time_keyboard=True, resize_keyboard=True))
 
-    update.message.reply_text('--- Translation DE -> EN\n\nNeeds to be accessed better.\n\nXML is not correct, but this show that translations work.')
-    
+    update.message.reply_text(
+        '--- Translation DE -> EN\n\nNeeds to be accessed better.\n\nXML is not correct, but this show that translations work.')
+
     translation = language_translator.translate(
         text=context.user_data['message'],
         model_id='de-en').get_result()
-    
+
     update.message.reply_text(translation)
-   
+
     update.message.reply_text("-----")
 
     if context.user_data['breaking']:
@@ -275,8 +277,7 @@ def error(update: Update, context: CallbackContext):
 
 
 if __name__ == '__main__':
-    
-    #test translation
+    # test translation
     translation = language_translator.translate(
         text='Hello, how are you today?',
         model_id='en-es').get_result()
