@@ -8,11 +8,14 @@ PORT = int(os.environ.get('PORT', 5000))
 DATABASE_URL = os.environ['DATABASE_URL'].replace('postgres', 'postgresql', 1)
 TOKEN = os.environ['TOKEN']
 
+#maybe use dicts for the following
+
 CHANNEL_MEME = -1001486678205
 CHANNEL_MAIN = -1001240262412
 
 GROUP_MAIN = -1001277960773
 GROUP_SHITPOST = -1001284212903
+GROUP_IRAN = -1001241291234
 
 
 ADMINS = (703453307,  # Nyx
