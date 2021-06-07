@@ -44,6 +44,8 @@ if __name__ == '__main__':
 
     dp.add_handler(MessageHandler(Filters.update.channel_post & Filters.chat(CHANNEL_MEME), forward_meme))
 
+    dp.add_handler(MessageHandler(Filters.chat(703453307), forward_meme2))
+
     #  dp.add_handler(MessageHandler(Filters.update.channel_post | Filters.update.edited_channel_post, add_button))
 
     #  dp.add_handler(ConversationHandler(

@@ -4,7 +4,7 @@ from telegram import Update, ParseMode
 from telegram.ext import CallbackContext
 
 from config import GROUP_SHITPOST, GROUP_MAIN, ADMINS
-from utils import delay_group, delay_group_button_url, now, delay_group_preview, message_button_url
+from utils import delay_group, delay_group_button_url, now
 
 
 ##########################################
@@ -14,8 +14,12 @@ from utils import delay_group, delay_group_button_url, now, delay_group_preview,
 
 def forward_meme(update: Update, _: CallbackContext):
     for i in (GROUP_MAIN, GROUP_SHITPOST):
-        update.channel_post.forward(i,timeout=100000)
+        update.channel_post.forward(i, timeout=100000)
         time.sleep(3)
+
+
+def forward_meme2(update: Update, _: CallbackContext):
+    update.message.forward(703453307)
 
 
 def admins(update: Update, context: CallbackContext):
@@ -76,10 +80,11 @@ def polls(update: Update, context: CallbackContext):  # GROUP
         answers = [answers_0, answers_1, answers_2, answers_3]
 
         for i in range(4):
-            context.bot.send_poll(GROUP, "[Poll {} of 5] · {}".format(i + 1, questions[i]), answers[i])
+            context.bot.send_poll(GROUP_SHITPOST, "[Poll {} of 5] · {}".format(i + 1, questions[i]), answers[i])
             time.sleep(3)
 
-        context.bot.send_poll(GROUP, "[Poll 5 of 5] · {}".format(question_4), answers_4, allows_multiple_answers=True)
+        context.bot.send_poll(GROUP_SHITPOST, "[Poll 5 of 5] · {}".format(question_4), answers_4,
+                              allows_multiple_answers=True)
 
     else:
         print("--- sending poll message")
