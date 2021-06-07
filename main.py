@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from telegram.ext import Updater, MessageHandler, Filters
 
-from config import DATABASE_URL, TOKEN, PORT
+from config import DATABASE_URL, TOKEN, PORT, CHANNEL_MEME
 from messages import *
 from postgres import PostgresPersistence
 from utils import remove_message
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     dp.add_handler(MessageHandler(Filters.text(
         ["/help@CoronaVirusRobot", "/victims@CoronaVirusRobot", "/infect@CoronaVirusRobot"]), remove_message))
 
-    dp.add_handler(MessageHandler(Filters.update.channel_post & Filters.chat(), forward_meme))
+    dp.add_handler(MessageHandler(Filters.update.channel_post & Filters.chat(CHANNEL_MEME), forward_meme))
 
     #  dp.add_handler(MessageHandler(Filters.update.channel_post | Filters.update.edited_channel_post, add_button))
 
