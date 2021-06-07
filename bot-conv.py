@@ -129,7 +129,8 @@ def message_preview(update: Update, context: CallbackContext) -> int:
                                                                one_time_keyboard=True, resize_keyboard=True))
 
     update.message.reply_text(
-        '--- Translation DE -> EN\n\nNeeds to be accessed better.\n\nXML is not correct, but this show that translations work.')
+        '--- Translation DE -> EN\n\nNeeds to be accessed better.\n\nXML is not correct, but this show that '
+        'translations work.')
 
     translation = language_translator.translate(
         text=context.user_data['message'],
@@ -257,6 +258,7 @@ def cancel(update: Update, context: CallbackContext) -> int:
         text='<b>Editing this post was cancelled</b> 🗑\nFeel free to create a new one',
         parse_mode=ParseMode.HTML,
         reply_markup=START_KEYBOARD)
+
     return ConversationHandler.END
 
 
@@ -290,13 +292,17 @@ if __name__ == '__main__':
 
     dp.add_handler(CommandHandler('start', start, filters=Filters.chat(chat_id=VERIFIED_USERS)))
 
+    dp.add_handler(MessageHandler(Filters.text, start))
+
+    dp.add_handler(MessageHandler(Filters.update.channel_post & Filters.chat(), add_button))
+
     dp.add_handler(MessageHandler(Filters.update.channel_post | Filters.update.edited_channel_post, add_button))
 
     dp.add_handler(ConversationHandler(
         entry_points=[MessageHandler(Filters.regex('Breaking news ‼️'), new_breaking),
                       MessageHandler(Filters.regex('Scheduled post 🕓'), new_post)],
         states={
-            NEWS: [MessageHandler(Filters.regex('.*'), text)],
+            NEWS: [MessageHandler(Filters.text, text)],
             MEDIA: [MessageHandler(Filters.photo, add_photo),
                     MessageHandler(Filters.video, add_video),
                     MessageHandler(Filters.regex('Use placeholder 🖼️'), skip_photo),
