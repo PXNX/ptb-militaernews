@@ -14,7 +14,7 @@ from utils import delay_group, delay_group_button_url, now, delay_group_preview,
 
 def forward_meme(update: Update, _: CallbackContext):
     for i in (GROUP_MAIN, GROUP_SHITPOST):
-        update.channel_post.forward(i)
+        update.channel_post.forward(i,timeout=100000)
         time.sleep(3)
 
 
