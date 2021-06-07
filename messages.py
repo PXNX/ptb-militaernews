@@ -30,7 +30,7 @@ def admins(update: Update, context: CallbackContext):
                 "\n@blue_bettle")
 
 
-def polls(update: Update, context: CallbackContext, GROUP=None):  # GROUP
+def polls(update: Update, context: CallbackContext):  # GROUP
 
     current_time = now()
     previous_timestamp = context.bot_data.get("previous_timestamp", 1000)
@@ -39,7 +39,7 @@ def polls(update: Update, context: CallbackContext, GROUP=None):  # GROUP
         update.message.delete()
         print("--- sending new poll")
 
-        current_link = context.bot.send_message(GROUP,
+        current_link = context.bot.send_message(GROUP_SHITPOST,
                                                 "Hey Realme Fans!"
                                                 "\n\n<b>It's once again time for Poll-Five 🖐️</b> "
                                                 "\n\nThis idea came up in @realme_offtopic a few days ago and I "
