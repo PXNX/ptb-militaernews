@@ -3,7 +3,7 @@ import time
 from telegram import Update, ParseMode
 from telegram.ext import CallbackContext
 
-from config import GROUP_SHITPOST, GROUP_MAIN
+from config import GROUP_SHITPOST, GROUP_MAIN, ADMINS
 from utils import delay_group, delay_group_button_url, now, delay_group_preview, message_button_url
 
 
@@ -30,7 +30,7 @@ def admins(update: Update, context: CallbackContext):
                 "\n@blue_bettle")
 
 
-def polls(update: Update, context: CallbackContext):  # GROUP
+def polls(update: Update, context: CallbackContext, GROUP=None):  # GROUP
 
     current_time = now()
     previous_timestamp = context.bot_data.get("previous_timestamp", 1000)
