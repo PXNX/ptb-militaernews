@@ -13,8 +13,9 @@ from utils import delay_group, delay_group_button_url, now, delay_group_preview,
 ##########################################
 
 def forward_meme(update: Update, _: CallbackContext):
-    for i in (GROUP_SHITPOST, GROUP_MAIN):
+    for i in (GROUP_MAIN, GROUP_SHITPOST):
         update.message.forward(i)
+        time.sleep(3)
 
 
 def admins(update: Update, context: CallbackContext):
