@@ -24,13 +24,14 @@ def start_session() -> scoped_session:
     return scoped_session(sessionmaker(bind=engine, autoflush=False))
 
 
-def error(update: Update, context: CallbackContext):
+def error(update: object, context: CallbackContext):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
-    context.bot.send_message(-1001338514957,
-                             "<b>🤖 Affected Bot</b>\n@" + context.bot.username +
-                             "\n\n<b>⚠ Error</b>\n<code>" + str(context.error) +
-                             "</code>\n\n<b>Caused by Update</b>\n<code>" + str(update) + "</code>",
-                             ParseMode.HTML)
+    if update is Update:
+        context.bot.send_message(-1001338514957,
+                                 "<b>🤖 Affected Bot</b>\n@" + context.bot.username +
+                                 "\n\n<b>⚠ Error</b>\n<code>" + str(context.error) +
+                                 "</code>\n\n<b>Caused by Update</b>\n<code>" + str(update) + "</code>",
+                                 ParseMode.HTML)
 
 
 if __name__ == '__main__':
@@ -60,6 +61,7 @@ if __name__ == '__main__':
     #      PUBLISH: [MessageHandler(Filters.regex('Submit post 📣'), publish)]},
     #   fallbacks=[MessageHandler(Filters.regex('Cancel 🗑'), cancel), CommandHandler('start', start)],
     #  ))
+    dp.add_error_handler(error)
 
     dp.bot.send_message(chat_id=703453307, text='BOT ONLINE ✅')
 

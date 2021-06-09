@@ -6,14 +6,16 @@ from telegram.ext import CallbackContext
 from config import GROUP_SHITPOST, GROUP_MAIN, ADMINS
 from utils import delay_group, delay_group_button_url, now
 
-
 ##########################################
 # this file contains the actions that will happen once a command is called
 # just replicate below schemes :)
 ##########################################
 
+GROUPS = (GROUP_MAIN, GROUP_SHITPOST)
+
+
 def forward_meme(update: Update, _: CallbackContext):
-    for i in (GROUP_MAIN, GROUP_SHITPOST):
+    for i in GROUPS:
         update.channel_post.forward(i, timeout=100000)
         time.sleep(3)
 
