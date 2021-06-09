@@ -3,6 +3,8 @@ import time
 from telegram import Update
 from telegram.ext import CallbackContext, MessageHandler, Filters, Updater
 
+from config import PORT
+
 
 def forward_test(update: Update, _: CallbackContext):
     for i in GROUPS:
@@ -20,6 +22,7 @@ if __name__ == '__main__':
     dp = updater.dispatcher
 
     dp.add_handler(MessageHandler(Filters.update.channel_post & Filters.chat(CHANNEL_ID), forward_test))
+    updater.start_webhook("0.0.0.0", PORT, TOKEN, webhook_url='https://ptb-militaernews.herokuapp.com/' + TOKEN)
 
-    updater.start_polling()
+    #   updater.start_polling()
     updater.idle()
